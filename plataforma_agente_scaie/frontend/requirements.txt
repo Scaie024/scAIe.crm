@@ -1,0 +1,8 @@
+# Frontend Development Requirements
+# This file lists tools needed for frontend development
+
+# Node.js version requirement
+nodejs>=18.0.0
+
+# NPM packages are managed in package.json
+# Run 'npm install' to install all dependencies

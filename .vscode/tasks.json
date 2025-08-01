@@ -1,0 +1,35 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+	   {
+		   "type": "shell",
+		   "label": "Run FastAPI backend",
+		   "command": "/Users/arturopinzon/Desktop/nuevo/.venv/bin/uvicorn",
+		   "args": [
+			   "app.main:app",
+			   "--reload",
+			   "--port",
+			   "8001"
+		   ],
+		   "options": {
+			   "cwd": "${workspaceFolder}/plataforma_agente_scaie/backend"
+		   },
+		   "group": "build",
+		   "isBackground": true,
+		   "problemMatcher": []
+	   }
+	   ,
+	   {
+		   "type": "shell",
+		   "label": "Run Vite frontend",
+		   "command": "npx",
+		   "args": ["vite"],
+		   "options": {
+			   "cwd": "${workspaceFolder}/plataforma_agente_scaie/frontend"
+		   },
+		   "group": "build",
+		   "isBackground": true,
+		   "problemMatcher": []
+	   }
+	]
+}
