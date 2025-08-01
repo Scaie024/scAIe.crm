@@ -1,11 +1,17 @@
 import os
-import httpx
+import asyncio
 from typing import Dict, List, Optional, Any
 from dotenv import load_dotenv
 import json
 import random
 from datetime import datetime
+import logging
 from .scaie_knowledge import scaie_knowledge
+from openai import AsyncOpenAI
+
+# Configurar logging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 # Cargar variables de entorno
 load_dotenv()
@@ -70,17 +76,26 @@ class LLMService:
         """Inicializa el servicio de lenguaje con Qwen."""
         # Configurar credenciales
         self.initialized = True
-        self.api_key = os.getenv('DASHSCOPE_API_KEY', 'sk-1ded1e3aa4d04a7593afc74a484cd4c1')
+        self.api_key = os.getenv('DASHSCOPE_API_KEY')
         
-        # Configuración del cliente HTTP
-        self.client = httpx.AsyncClient(
-            base_url="https://dashscope.aliyuncs.com/api/v1",
-            headers={
-                "Authorization": f"Bearer {self.api_key}",
-                "Content-Type": "application/json"
-            },
-            timeout=30.0
-        )
+        # Verificar si se proporcionó una clave API
+        if not self.api_key or self.api_key.strip() == "":
+            logger.warning("No se ha proporcionado una clave API de DashScope")
+            self.api_key = None
+            self.demo_mode = True
+        else:
+            # Registro de depuración
+            logger.debug(f"Usando API Key: {self.api_key[:5]}...{self.api_key[-5:]}")
+            self.demo_mode = False
+        
+        # Configuración del cliente OpenAI (solo si hay clave API)
+        if self.api_key:
+            self.client = AsyncOpenAI(
+                api_key=self.api_key,
+                base_url="https://dashscope-intl.aliyuncs.com/compatible-mode/v1",
+            )
+        else:
+            self.client = None
         
         # Modelo Qwen a usar
         self.model_name = os.getenv('QWEN_MODEL', 'qwen-plus')
@@ -122,6 +137,8 @@ class LLMService:
         6. Usa emojis ocasionalmente para hacer la conversación más amena (pero no exageres)
         7. Identifica oportunidades de venta y presenta SCAIE como solución
         8. Siempre busca cerrar la venta o al menos obtener contacto para seguimiento
+        9. Escucha activamente y adapta tu enfoque según las respuestas del usuario
+        10. Si el usuario muestra interés, profundiza en los beneficios específicos para su caso
         
         # CONOCIMIENTO SOBRE SCAIE (www.scaie.com.mx)
         SCAIE ofrece un workshop de automatización de ventas que incluye:
@@ -145,6 +162,7 @@ class LLMService:
         - Mantén las respuestas enfocadas en cómo SCAIE puede aumentar las ventas del usuario
         - Usa el conocimiento de www.scaie.com.mx para dar respuestas precisas y útiles
         - Siempre busca una oportunidad para presentar SCAIE como solución
+        - Si el usuario menciona un problema específico, enfócate en cómo SCAIE lo resuelve
         
         # EJEMPLOS DE RESPUESTAS EFECTIVAS
         Buenas respuestas:
@@ -157,6 +175,24 @@ class LLMService:
         - "No sé la respuesta a eso."
         - "Lo siento, no puedo ayudarte con eso."
         - Respuestas genéricas sin personalización
+        
+        # TÉCNICA DE CIERRE DE VENTAS
+        Cuando identifiques interés:
+        1. Resume los beneficios mencionados que aplican a su caso
+        2. Ofrece una llamada gratuita de 15 minutos
+        3. Pide su número de WhatsApp o correo para contacto
+        4. Confirma la fecha y hora de la llamada
+        5. Envía confirmación por correo si es posible
+        
+        # MANEJO DE OBJECIONES COMUNES
+        Si el usuario dice que es caro:
+        - "Entiendo tu preocupación por la inversión. Permíteme mostrarte cómo SCAIE puede generar más ingresos de los que cuesta en el primer mes."
+        
+        Si el usuario dice que no tiene tiempo:
+        - "Justamente por eso es importante automatizar. SCAIE te ahorra horas de trabajo manual cada semana."
+        
+        Si el usuario dice que ya tiene algo similar:
+        - "Me alegra que ya estés trabajando en automatización. ¿Qué te diferencia de otras soluciones es que SCAIE..."
         """
         
         self.conversation_history = [{
@@ -174,9 +210,37 @@ class LLMService:
         Returns:
             Dict con la respuesta generada y metadatos
         """
+        logger.debug(f"Generando respuesta para el mensaje: {user_message}")
+        
+        # Si no hay clave API, devolver un mensaje indicando que se necesita configurar
+        if not self.api_key:
+            logger.debug("No hay clave API, mostrando mensaje de configuración")
+            response_text = "Para utilizar el agente de inteligencia artificial, necesitas configurar una clave API válida de DashScope. Por favor, visita https://dashscope.console.aliyuncs.com/ para obtener una clave y configúrala en el archivo .env."
+            
+            # Agregar respuesta al historial
+            self.conversation_history.append({
+                'role': 'user',
+                'content': user_message
+            })
+            self.conversation_history.append({
+                'role': 'assistant',
+                'content': response_text
+            })
+            
+            return {
+                'success': True,
+                'response': response_text,
+                'metadata': {
+                    'model': 'no-api-key',
+                    'tokens_used': 0,
+                    'context_used': []
+                }
+            }
+        
         try:
             # Obtener conocimiento relevante de SCAIE
             knowledge = scaie_knowledge.get_knowledge(user_message)
+            logger.debug(f"Conocimiento obtenido: {knowledge}")
             
             # Crear contexto con la información relevante
             context_parts = []
@@ -205,6 +269,8 @@ class LLMService:
             - Tu objetivo es convencer al usuario de los beneficios de SCAIE para aumentar sus ventas
             - Siempre busca una oportunidad para presentar SCAIE como solución
             - Si es apropiado, invita al usuario a agendar una sesión gratuita o demostración
+            - Si el usuario menciona un problema específico, enfócate en cómo SCAIE lo resuelve
+            - Si detectas interés, aplica técnicas de cierre de ventas
             """
             
             # Agregar mensaje del usuario con contexto al historial
@@ -214,33 +280,22 @@ class LLMService:
                 'content': message_with_context
             })
             
+            logger.debug(f"Enviando solicitud a Qwen con {len(messages)} mensajes en el historial")
+            
             # Generar respuesta con Qwen
             try:
-                response = await self.client.post(
-                    "/services/aigc/text-generation/generation",
-                    json={
-                        "model": self.model_name,
-                        "input": {
-                            "messages": messages
-                        },
-                        "parameters": {
-                            "temperature": self.generation_config['temperature'],
-                            "max_tokens": self.generation_config['max_tokens'],
-                            "top_p": self.generation_config['top_p'],
-                            "top_k": self.generation_config['top_k'],
-                            "seed": 1234
-                        }
-                    }
+                completion = await self.client.chat.completions.create(
+                    model=self.model_name,
+                    messages=messages,
+                    temperature=self.generation_config['temperature'],
+                    max_tokens=self.generation_config['max_tokens'],
+                    top_p=self.generation_config['top_p']
                 )
                 
-                response.raise_for_status()
-                result = response.json()
+                logger.debug(f"Resultado de Qwen: {completion}")
                 
                 # Obtener y formatear la respuesta
-                if result.get("output") and result["output"].get("text"):
-                    response_text = result["output"]["text"]
-                else:
-                    response_text = "Lo siento, estoy teniendo dificultades técnicas en este momento. ¿Podrías reformular tu pregunta?"
+                response_text = completion.choices[0].message.content
                 
                 # Dar formato a la respuesta para que sea más natural
                 response_text = format_response(response_text)
@@ -260,31 +315,55 @@ class LLMService:
                     'response': response_text,
                     'metadata': {
                         'model': self.model_name,
-                        'tokens_used': len(response_text.split()),  # Estimación
+                        'tokens_used': completion.usage.total_tokens if completion.usage else len(response_text.split()),
                         'context_used': knowledge.get('relevant_sections', [])
                     }
                 }
-            except httpx.TimeoutException:
+            except Exception as e:
+                logger.error(f"Error al llamar a Qwen: {e}")
+                print(f"Error al llamar a Qwen: {e}")
+                if "invalid_api_key" in str(e).lower():
+                    # En caso de error de autenticación, usar modo demo
+                    logger.warning("API Key no válida, usando modo demo")
+                    return await self._generate_demo_response(user_message)
+                
                 return {
                     'success': False,
-                    'error': 'Timeout al generar la respuesta',
-                    'response': 'Lo siento, estoy teniendo problemas para procesar tu solicitud en este momento. ¿Podrías intentar reformular tu pregunta?'
-                }
-            except httpx.HTTPStatusError as e:
-                print(f"Error HTTP al llamar a Qwen: {e}")
-                return {
-                    'success': False,
-                    'error': f'Error HTTP: {e}',
+                    'error': f'Error: {e}',
                     'response': 'Lo siento, ha ocurrido un error al procesar tu solicitud. ¿Podrías intentar reformular tu pregunta?'
                 }
             
         except Exception as e:
+            logger.error(f"Error al generar respuesta: {e}")
             print(f"Error al generar respuesta: {e}")
-            return {
-                'success': False,
-                'error': str(e),
-                'response': 'Lo siento, ha ocurrido un error al procesar tu solicitud. ¿Podrías intentar reformular tu pregunta?'
+            # En caso de cualquier error, usar modo demo
+            return await self._generate_demo_response(user_message)
+    
+    async def _generate_demo_response(self, user_message: str) -> Dict[str, Any]:
+        """Genera una respuesta de demostración cuando hay errores."""
+        # Esta función ya no se usa ya que ahora mostramos mensajes específicos sobre la API
+        # cuando no hay clave o es inválida
+        response_text = "Para utilizar el agente de inteligencia artificial, necesitas configurar una clave API válida de DashScope. Por favor, visita https://dashscope.console.aliyuncs.com/ para obtener una clave y configúrala en el archivo .env."
+        
+        # Agregar respuesta al historial
+        self.conversation_history.append({
+            'role': 'user',
+            'content': user_message
+        })
+        self.conversation_history.append({
+            'role': 'assistant',
+            'content': response_text
+        })
+        
+        return {
+            'success': True,
+            'response': response_text,
+            'metadata': {
+                'model': 'no-api-key',
+                'tokens_used': 0,
+                'context_used': []
             }
+        }
     
     def reset_conversation(self):
         """Reinicia la conversación."""

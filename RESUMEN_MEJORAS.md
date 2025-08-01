@@ -1,4 +1,18 @@
-# Resumen de Mejoras Realizadas en el Proyecto SCAIE
+# Resumen de Mejoras del Sistema SCAIE
+
+## Mejoras Implementadas
+
+### 7. Integración del Cliente OpenAI con Qwen API
+- Reemplazo de las llamadas HTTP directas con el cliente OpenAI para una interfaz más estandarizada
+- Actualización de la URL base a `https://dashscope-intl.aliyuncs.com/compatible-mode/v1` (modo compatible con OpenAI)
+- Modificación del formato de solicitud para que coincida con la API de OpenAI
+- Mejora del manejo de respuestas y errores
+- Añadido mejor manejo de casos sin clave API válida
+- Añadidas técnicas de cierre de ventas y manejo de objeciones al prompt del sistema
+- Mejorado el registro (logging) para facilitar la depuración
+- Añadido el paquete `openai==1.35.3` a las dependencias del proyecto
+- Creado archivo de documentación [OPENAI_INTEGRATION.md](file:///Users/arturopinzon/Desktop/scAIe%20-%20Sistema%20Agente/plataforma_agente_scaie/OPENAI_INTEGRATION.md) con detalles de la integración
+- Creado script de prueba [test_openai_integration.py](file:///Users/arturopinzon/Desktop/scAIe%20-%20Sistema%20Agente/plataforma_agente_scaie/test_openai_integration.py) para verificar la integración
 
 ## Descripción del Proyecto
 SCAIE (Sistema Conversacional de Atención e Inteligencia Empresarial) es una plataforma de agente conversacional para ventas automatizadas. El sistema combina un backend en Python (FastAPI) con un frontend en Vue 3, integrado con la IA Qwen de Alibaba Cloud.
