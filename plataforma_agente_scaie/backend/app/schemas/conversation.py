@@ -3,15 +3,15 @@ from typing import Optional, List
 from datetime import datetime
 
 class MessageBase(BaseModel):
-    content: str
+    conversation_id: int
     sender: str
+    content: str
 
 class MessageCreate(MessageBase):
     pass
 
 class Message(MessageBase):
     id: int
-    conversation_id: int
     created_at: datetime
     
     class Config:
@@ -31,3 +31,5 @@ class Conversation(ConversationBase):
     
     class Config:
         orm_mode = True
+        # Add from_orm method
+        from_attributes = True

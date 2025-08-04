@@ -1,4 +1,5 @@
 import os
+import sys
 from pathlib import Path
 from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
@@ -6,9 +7,12 @@ from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
+# Añadir el directorio backend al path para resolver importaciones
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+
 # Importar modelos antes de crear las tablas
-from .models import contact, conversation
-from .core.database import engine, Base
+from app.models import contact, conversation
+from app.core.database import engine, Base
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
@@ -20,6 +24,10 @@ app = FastAPI(title="SCAIE - Sistema Agente",
 # Configuración de rutas estáticas
 BASE_DIR = Path(__file__).resolve().parent.parent
 STATIC_DIR = os.path.join(BASE_DIR, "static")
+
+# Incluir rutas de la API
+from app.api.api import api_router
+app.include_router(api_router, prefix="/api")
 
 # Configuración de archivos estáticos
 app.mount("/static", StaticFiles(directory=os.path.join(STATIC_DIR, "assets")), name="static")
@@ -33,10 +41,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Incluir rutas de la API
-from .api.api import api_router
-app.include_router(api_router, prefix="/api")
-
 # Servir archivos estáticos
 @app.get("/assets/{file_path:path}")
 async def serve_static(file_path: str):
@@ -44,6 +48,11 @@ async def serve_static(file_path: str):
     if os.path.exists(static_file):
         return FileResponse(static_file)
     return {"detail": "Not Found"}, 404
+
+# Ruta de salud
+@app.get("/health")
+async def health_check():
+    return {"status": "healthy"}
 
 # Servir el archivo index.html para cualquier ruta no manejada
 @app.get("/")
@@ -58,11 +67,6 @@ async def catch_all(full_path: str, request: Request):
         return {"detail": "Not Found"}, 404
     # Devolver el index.html para cualquier otra ruta
     return FileResponse(os.path.join(STATIC_DIR, "index.html"))
-
-# Ruta de salud
-@app.get("/health")
-async def health_check():
-    return {"status": "healthy"}
 
 if __name__ == "__main__":
     # Asegurarse de que el directorio static exista

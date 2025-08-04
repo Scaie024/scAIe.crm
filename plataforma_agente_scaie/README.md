@@ -1,285 +1,231 @@
-# SCAIE - Sistema Agente Conversacional de Ventas v1.0
+# SCAIE - Sistema Conversacional de Atención e Inteligencia Empresarial
 
-## 🚀 Descripción General
+## 📋 Índice
+- [Descripción](#descripción)
+- [Características](#características)
+- [Arquitectura](#arquitectura)
+- [Inicio Rápido](#inicio-rápido)
+- [Estructura del Proyecto](#estructura-del-proyecto)
+- [Tecnologías](#tecnologías)
+- [API](#api)
+- [Despliegue](#despliegue)
+- [Contribución](#contribución)
+- [Licencia](#licencia)
 
-SCAIE (Sistema Conversacional de Atención e Inteligencia Empresarial) v1.0 es una plataforma de agente conversacional para ventas automatizadas. El sistema combina un backend en Python (FastAPI) con un frontend en Vue 3, integrado con la IA Qwen de Alibaba Cloud para proporcionar una experiencia de chat conversacional avanzada.
+## 📖 Descripción
 
-### Características Principales
+SCAIE (Sistema Conversacional de Atención e Inteligencia Empresarial) es una plataforma de agente conversacional con una arquitectura "Agent-Centric" donde el agente de IA es el actor principal del sistema.
 
-- 🤖 **Chat Conversacional con IA** (Qwen de Alibaba Cloud)
-- 🖥️ **Panel de Administración** - Interfaz intuitiva para gestión
-- 👥 **Gestión de Contactos y Conversaciones** - Seguimiento completo de interacciones
-- 📤 **Exportación de Datos** (CSV, Excel, JSON) - Para análisis y reportes
-- ⚡ **WebSockets** - Actualizaciones en tiempo real
-- 📱 **Diseño Responsive** - Compatible con dispositivos móviles y escritorio
-- 🔐 **Autenticación JWT** - Seguridad robusta
-- 📚 **API RESTful Documentada** - Integración fácil con otros sistemas
+## 🌟 Características
 
-### Valor del Proyecto
+- 🤖 Agente de ventas automatizadas con inteligencia artificial
+- 💬 Interfaz de chat en tiempo real
+- 📇 Gestión de contactos y clientes potenciales
+- 📊 Panel de control con estadísticas y métricas
+- ⚙️ Configuración personalizable del agente
+- 🌐 Integración con múltiples canales (WhatsApp, Facebook, etc.)
+- 📱 Interfaz responsive y moderna
 
-- Automatiza la interacción con clientes potenciales
-- Mejora la eficiencia en ventas mediante IA conversacional avanzada
-- Ofrece una interfaz intuitiva y herramientas de análisis
+## 🏗️ Arquitectura
 
-### Problemas Resueltos
+La arquitectura sigue un paradigma "Agent-Centric Design" donde:
 
-- Interacción manual repetitiva con clientes
-- Falta de seguimiento estructurado en procesos de ventas
-- Dificultad para escalar atención personalizada a través de chatbots
+- El agente de IA es el actor principal del sistema
+- Backend (Python/FastAPI) proporciona una plataforma de operación, monitoreo y desarrollo (M&D)
+- Frontend (Vue.js) actúa como interfaz de operaciones y depuración (Control Tower)
+- Se utiliza Qwen AI (Alibaba Cloud) para el procesamiento de lenguaje natural
 
----
-
-## 📁 Estructura del Proyecto
-
-```
-plataforma_agente_scaie/
-│
-├── backend/                 # Backend en Python/FastAPI
-│   ├── app/                 # Código fuente principal
-│   │   ├── api/             # Endpoints de la API
-│   │   │   ├── endpoints/   # Módulos de endpoints
-│   │   │   └── api.py       # Configuración de rutas API
-│   │   ├── core/            # Configuración y seguridad
-│   │   ├── models/          # Modelos de base de datos (pendiente)
-│   │   ├── schemas/         # Validación de datos (pendiente)
-│   │   ├── services/        # Lógica de negocio (pendiente)
-│   │   ├── static/          # Frontend compilado (generado)
-│   │   └── main.py          # Punto de entrada de la aplicación
-│   ├── requirements.txt     # Dependencias de Python
-│   └── .env                 # Variables de entorno (crear manualmente)
-│
-├── frontend/                # Frontend en Vue 3 (código fuente)
-│   ├── src/                 # Código fuente del frontend
-│   │   ├── components/      # Componentes reutilizables
-│   │   ├── views/           # Vistas principales
-│   │   │   ├── Agent.vue    # Vista de configuración del agente
-│   │   │   ├── Chat.vue     # Interfaz de chat
-│   │   │   ├── Contacts.vue # Gestión de contactos
-│   │   │   └── Dashboard.vue# Panel de control
-│   │   ├── router/          # Configuración de rutas
-│   │   ├── App.vue          # Componente raíz
-│   │   └── main.js          # Punto de entrada de la aplicación
-│   ├── public/              # Archivos públicos
-│   ├── index.html           # Plantilla HTML principal
-│   ├── package.json         # Dependencias de Node.js
-│   ├── vite.config.js       # Configuración de Vite
-│   └── tailwind.config.js   # Configuración de Tailwind CSS
-│
-├── .gitignore              # Archivos ignorados por Git
-├── DOCUMENTACION_CONFIGURACION.md  # Documentación detallada
-└── README.md               # Este archivo
-```
-├── start.sh                 # Script de inicio automatizado
-└── README.md                # Este archivo
+```mermaid
+graph TD
+    A[Cliente Web] --> B[Frontend Vue.js]
+    B --> C[Backend FastAPI]
+    C --> D[(Base de Datos SQLite)]
+    C --> E[API Qwen/DashScope]
+    C --> F[Servicios Externos<br/>WhatsApp, Facebook, etc.]
+    
+    subgraph Frontend
+        B
+    end
+    
+    subgraph Backend
+        C
+        D
+        E
+        F
+    end
+    
+    style A fill:#e1f5fe
+    style B fill:#f3e5f5
+    style C fill:#e8f5e8
+    style D fill:#fff3e0
+    style E fill:#ffebee
+    style F fill:#f1f8e9
 ```
 
----
+## 🚀 Inicio Rápido
 
-## 🛠️ Requisitos del Sistema (Producción)
-
+### Prerrequisitos
 - Python 3.10+
-- Node.js 18+ (solo para reconstruir el frontend)
-- Clave de API de Qwen (Dashscope) - [Obtener aquí](https://dashscope.aliyuncs.com/)
-- Servidor web (Nginx, Apache, etc.) para entornos de producción
+- Node.js 14+
+- npm o yarn
 
----
+### Ejecutar el Sistema Localmente
 
-## 🚀 Despliegue en Producción
+```bash
+# Clonar el repositorio
+git clone <repositorio>
 
-### Opción 1: Despliegue Directo (Recomendado para pruebas)
+# Navegar al directorio del proyecto
+cd plataforma_agente_scaie
+```
 
-1. **Clonar el Repositorio**
-   ```bash
-   git clone <url-del-repositorio>
-   cd plataforma_agente_scaie
-   ```
+### Versión mejorada (recomendada)
 
-2. **Dar permisos de ejecución al script**
-   ```bash
-   chmod +x start.sh
-   ```
+```bash
+# Dar permisos de ejecución al script
+chmod +x build_and_run.sh
 
-3. **Ejecutar el sistema**
-   ```bash
-   ./start.sh
-   ```
+# Ejecutar el sistema con las mejoras UX/UI
+./build_and_run.sh
+```
+
+### Versión original
+
+```bash
+# Dar permisos de ejecución al script
+chmod +x run_local.sh
+
+# Ejecutar el sistema
+./run_local.sh
+```
 
 El sistema estará disponible en:
 - Frontend: http://localhost:8001/
 - API: http://localhost:8001/api
 - Documentación interactiva: http://localhost:8001/docs
 
-### Opción 2: Despliegue con Docker (Recomendado para producción)
+### Ejecutar el Sistema Localmente con Acceso en Línea (ngrok)
 
-1. **Construir las imágenes Docker**
-   ```bash
-   docker-compose -f docker-compose.prod.yml up -d --build
+Para ejecutar el sistema localmente y permitir acceso en línea a través de ngrok:
+
+```bash
+# Navegar al directorio del proyecto
+cd plataforma_agente_scaie
+
+# Dar permisos de ejecución al nuevo script
+chmod +x run_with_ngrok.sh
+
+# Ejecutar el sistema con ngrok
+./run_with_ngrok.sh
+```
+
+El sistema estará disponible en:
+- Localmente: http://localhost:8001/
+- En línea: La URL será mostrada por ngrok en la consola o puedes acceder a http://localhost:4040 para ver la URL pública
+
+## 📁 Estructura del Proyecto
+
+```
+plataforma_agente_scaie/
+├── backend/                 # Backend de la aplicación (FastAPI)
+│   ├── app/                 # Código fuente del backend
+│   │   ├── api/             # Endpoints de la API
+│   │   ├── core/            # Configuración central (DB, seguridad)
+│   │   ├── models/          # Modelos de datos (SQLAlchemy)
+│   │   ├── schemas/         # Esquemas de validación (Pydantic)
+│   │   ├── services/        # Lógica de negocio
+│   │   └── main.py          # Punto de entrada de la aplicación
+│   ├── requirements.txt     # Dependencias del backend
+│   └── scaie.db             # Base de datos SQLite
+├── frontend/                # Frontend de la aplicación (Vue.js)
+│   ├── src/                 # Código fuente del frontend
+│   │   ├── components/      # Componentes reutilizables
+│   │   │   ├── agent/       # Componentes del agente
+│   │   │   ├── chat/        # Componentes del chat
+│   │   │   ├── contacts/    # Componentes de contactos
+│   │   │   ├── dashboard/   # Componentes del dashboard
+│   │   │   └── shared/      # Componentes compartidos
+│   │   ├── composables/     # Composables de Vue (lógica reutilizable)
+│   │   ├── router/          # Configuración de rutas
+│   │   ├── services/        # Servicios (API client)
+│   │   ├── views/           # Vistas principales
+│   │   ├── App.vue          # Componente raíz
+│   │   └── main.js          # Punto de entrada
+│   ├── index.html           # Plantilla HTML
+│   └── package.json         # Dependencias del frontend
+├── README.md                # Este archivo
+└── LICENSE                  # Licencia del proyecto
+```
+
+## 💻 Tecnologías
+
+- **Backend**: Python 3.9+, FastAPI, SQLite, SQLAlchemy
+- **Frontend**: Vue 3 (Composition API), Vite, TailwindCSS
+- **IA**: Qwen (Dashscope API)
+- **Autenticación**: JWT (en desarrollo)
+- **Despliegue**: Docker (opcional)
+
+## 🔌 API
+
+La API está documentada con Swagger/OpenAPI y está disponible en `/docs` cuando el servidor está corriendo.
+
+### Endpoints principales
+
+- `GET /api/agent/stats` - Estadísticas del agente
+- `GET /api/contacts/` - Listar contactos
+- `POST /api/contacts/` - Crear contacto
+- `GET /api/contacts/{id}` - Obtener contacto por ID
+- `PUT /api/contacts/{id}` - Actualizar contacto
+- `DELETE /api/contacts/{id}` - Eliminar contacto
+- `POST /api/contacts/import` - Importar contactos desde CSV/JSON
+- `POST /api/chat/` - Chat con el agente
+
+## 🚢 Despliegue
+
+### Despliegue Local
+
+1. Configurar variables de entorno en `.env`:
+   ```
+   DASHSCOPE_API_KEY=tu_api_key_de_qwen
+   DATABASE_URL=sqlite:///./scaie.db
    ```
 
-2. **Acceder al sistema**
-   - Frontend: http://localhost:80/
-   - API: http://localhost:80/api
-   - Documentación: http://localhost:80/docs
+2. Instalar dependencias:
+   ```bash
+   # Backend
+   pip install -r backend/requirements.txt
+   
+   # Frontend
+   cd frontend && npm install
+   ```
 
----
+3. Construir el frontend:
+   ```bash
+   cd frontend
+   npm run build
+   ```
 
-## ⚙️ Configuración de Producción
+4. Ejecutar el servidor:
+   ```bash
+   cd backend
+   uvicorn app.main:app --host 0.0.0.0 --port 8001
+   ```
 
-### Variables de Entorno
-
-Crea un archivo [.env](file:///Users/arturopinzon/Desktop/scAIe%20-%20Sistema%20Agente/plataforma_agente_scaie/backend/migrations/env.py#L0-L0) en el directorio `backend/` con las siguientes variables:
-
-```env
-# Configuración de base de datos
-DATABASE_URL=sqlite:///./scaie.db
-
-# Configuración de Qwen AI (requerido)
-DASHSCOPE_API_KEY=tu_clave_aqui
-
-# Modelo Qwen a utilizar
-QWEN_MODEL=qwen-plus
-
-# Configuración de autenticación
-SECRET_KEY=clave_secreta_segura_para_produccion
-ACCESS_TOKEN_EXPIRE_MINUTES=1440
-
-# Configuración del agente
-AGENT_NAME=SCAI
-AGENT_PERSONALITY=amigable, empático, profesional, persuasivo
-AGENT_TONE=coloquial pero respetuoso
-AGENT_GOAL=ayudar a los usuarios a entender los beneficios de SCAIE de manera natural
-
-# Saltar autenticación (solo para desarrollo)
-SKIP_AUTH=false
-```
-
-### Variables de Entorno Importantes
-
-| Variable | Descripción | Valor por defecto |
-|----------|-------------|-------------------|
-| `DASHSCOPE_API_KEY` | Clave de API de Qwen | `sk-1ded1e3aa4d04a7593afc74a484cd4c1` |
-| `QWEN_MODEL` | Modelo Qwen a usar | `qwen-plus` |
-| `DATABASE_URL` | URL de conexión a la base de datos | `sqlite:///./scaie.db` |
-| `SECRET_KEY` | Clave secreta para JWT | `scaie_secret_key_for_development` |
-| `SKIP_AUTH` | Saltar autenticación (solo desarrollo) | `true` |
-
----
-
-## 🔧 Gestión de la Aplicación
-
-### Iniciar la Aplicación
+### Despliegue con Docker (opcional)
 
 ```bash
-./start.sh
+# Construir y ejecutar con docker-compose
+docker-compose up --build
 ```
 
-### Detener la Aplicación
+## 🤝 Contribución
 
-```bash
-# Presiona Ctrl+C en la terminal donde se ejecuta start.sh
-# O si se está ejecutando en segundo plano:
-pkill -f uvicorn
-```
-
-### Reconstruir el Frontend
-
-```bash
-cd frontend
-npm install
-npm run build
-```
-
----
-
-## 📚 Documentación de la API
-
-Una vez iniciado el servidor, puedes acceder a la documentación interactiva en:
-
-- Swagger UI: http://localhost:8001/docs
-- ReDoc: http://localhost:8001/redoc
-
----
-
-## 👥 Credenciales por Defecto
-
-Para facilitar las pruebas, el sistema viene con credenciales por defecto:
-
-- **Usuario**: admin
-- **Contraseña**: admin
-
-> ⚠️ **Importante**: Cambia estas credenciales en entornos de producción
-
----
-
-
----
-
-## 🛡️ Consideraciones de Seguridad
-
-- Las claves de API deben mantenerse seguras y nunca ser compartidas públicamente
-- En producción, desactivar `SKIP_AUTH`
-- Usar HTTPS en entornos de producción
-- Actualizar regularmente las dependencias
-
----
-
-## 📈 Monitoreo y Mantenimiento
-
-### Logs
-
-Los logs de la aplicación se pueden encontrar en:
-- Aplicación: stdout/stderr
-- Nginx (si se usa): `/var/log/nginx/`
-
-### Actualizaciones
-
-Para actualizar a una nueva versión:
-```bash
-git pull
-cd backend
-pip install -r requirements.txt
-cd ../frontend
-npm install
-npm run build
-```
-
----
-
-## 🆘 Soporte y Resolución de Problemas
-
-### Problemas Comunes
-
-1. **Puerto ocupado**: Si el puerto 8001 está ocupado, edita el script [start.sh](file:///Users/arturopinzon/Desktop/scAIe%20-%20Sistema%20Agente/plataforma_agente_scaie/start.sh) para usar otro puerto
-2. **Dependencias faltantes**: Asegúrate de tener instalado Python 3.10+ y Node.js 18+
-3. **Error de clave API**: Verifica que la variable `DASHSCOPE_API_KEY` esté correctamente configurada
-
-### Obtener Ayuda
-
-- Documentación: http://localhost:8001/docs
-- Reportar problemas: [Issues en GitHub](https://github.com/tu-organizacion/scaie/issues)
-
----
+1. Fork del repositorio
+2. Crear rama de características (`git checkout -b feature/NuevaFuncionalidad`)
+3. Commit de cambios (`git commit -m 'Añadir nueva funcionalidad'`)
+4. Push a la rama (`git push origin feature/NuevaFuncionalidad`)
+5. Abrir Pull Request
 
 ## 📄 Licencia
 
 Este proyecto está licenciado bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para más detalles.
-
----
-
-## 🤝 Contribuciones
-
-Para contribuciones, por favor sigue estos pasos:
-
-1. Haz un fork del repositorio
-2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Realiza tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Publica tu rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
-
----
-
-<div align="center">
-  <p>SCAIE v1.0 - Sistema Agente Conversacional de Ventas</p>
-  <p>Desarrollado con ❤️ por el equipo de SCAIE</p>
-  <p>🚀 Potenciado por Qwen AI</p>
-</div>

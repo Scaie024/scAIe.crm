@@ -35,7 +35,8 @@ def create_contact(
     if existing_contact:
         raise HTTPException(status_code=400, detail="Contact with this phone number already exists")
     
-    return contact_service.create_contact(db, contact)
+    db_contact = contact_service.create_contact(db, contact)
+    return Contact(**db_contact.to_dict())
 
 @router.get("/{contact_id}", response_model=Contact)
 def get_contact(
@@ -62,7 +63,7 @@ def update_contact(
     db_contact = contact_service.update_contact(db, contact_id, contact)
     if not db_contact:
         raise HTTPException(status_code=404, detail="Contact not found")
-    return db_contact
+    return Contact(**db_contact.to_dict())
 
 @router.delete("/{contact_id}")
 def delete_contact(

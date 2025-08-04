@@ -1,61 +1,45 @@
 #!/bin/bash
 
-# Script simplificado para ejecutar la aplicación localmente
+# Script para ejecutar la aplicación SCAIE localmente
 
-echo "Iniciando SCAIE - Sistema Agente Conversacional..."
-
-# Directorio base
-BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-cd "$BASE_DIR"
-
-# Activar entorno virtual
-if [ -d "venv" ]; then
-    echo "Activando entorno virtual..."
-    source venv/bin/activate
-else
+# Verificar si el entorno virtual existe, si no, crearlo
+if [ ! -d "venv" ]; then
     echo "Creando entorno virtual..."
     python3 -m venv venv
     source venv/bin/activate
-    echo "Instalando dependencias..."
+    pip install --upgrade pip
     pip install -r backend/requirements.txt
+else
+    echo "Activando entorno virtual..."
+    source venv/bin/activate
 fi
 
-# Navegar al directorio backend
-cd backend
-
-# Crear archivo .env si no existe
+# Verificar si el archivo .env existe, si no, crearlo con valores por defecto
 if [ ! -f ".env" ]; then
-    echo "Creando archivo .env con configuración por defecto..."
+    echo "Creando archivo .env..."
     cat > .env << EOF
-# Configuración de base de datos
+# Configuración de la base de datos
 DATABASE_URL=sqlite:///./scaie.db
 
-# Configuración de Qwen AI (requerido)
-# Obtén tu clave en: https://dashscope.aliyuncs.com/
-DASHSCOPE_API_KEY=sk-1ded1e3aa4d04a7593afc74a484cd4c1
+# Configuración de seguridad
+SECRET_KEY=your_secret_key_here
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=30
 
-# Modelo Qwen a utilizar
+# Configuración de la API de DashScope (Qwen)
+DASHSCOPE_API_KEY=sk-ff40b02e0b454d379ea51160cfbadfa9
+
+# Configuración del modelo Qwen
 QWEN_MODEL=qwen-plus
 
-# Configuración de autenticación
-SECRET_KEY=scaie_secret_key_for_development
-ACCESS_TOKEN_EXPIRE_MINUTES=1440
-
-# Configuración del agente
-AGENT_NAME=SCAI
-AGENT_PERSONALITY=amigable, empático, profesional, persuasivo
-AGENT_TONE=coloquial pero respetuoso
-AGENT_GOAL=ayudar a los usuarios a entender los beneficios de SCAIE de manera natural
-
-# Saltar autenticación (solo para desarrollo)
-SKIP_AUTH=true
+# Configuración de generación de texto
+TEMPERATURE=0.8
+MAX_TOKENS=1024
+TOP_P=0.9
+TOP_K=30
 EOF
 fi
 
-echo "Iniciando servidor en el puerto 8001..."
-echo "Accede a la aplicación en: http://localhost:8001"
-echo "Documentación de la API: http://localhost:8001/docs"
-echo "Presiona Ctrl+C para detener el servidor"
-
-# Iniciar el servidor
-uvicorn app.main:app --host 0.0.0.0 --port 8001
+# Iniciar la aplicación
+echo "Iniciando la aplicación SCAIE..."
+python3 backend/app/main.py
