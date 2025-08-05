@@ -19,7 +19,7 @@ from app.core.database import engine, Base
 
 app = FastAPI(title="SCAIE - Sistema Agente", 
               description="Plataforma conversacional de inteligencia artificial para ventas automatizadas",
-              version="1.0.0")
+              version="1.1.0")
 
 # Configuración de rutas estáticas
 BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent

@@ -20,27 +20,22 @@
 - Versión actualizada a 2.1.0 para reflejar la integración con Telegram
 - README.md actualizado con instrucciones de configuración de Telegram
 
-## [2.0.0] - 2025-08-04
+## [1.1.0] - 2025-08-05
 
-### Añadido
-- Script de ejecución mejorado `run_scaie.sh` con verificación de variables de entorno y base de datos
-- Sistema de tareas automatizadas para seguimiento de clientes
-- Agente todopoderoso con capacidades extendidas
-- Nuevos endpoints de API para gestión de tareas y acciones del agente
-- Modelos de datos extendidos para agentes, acciones y tareas
-- Sistema de inicialización automática de base de datos
-- Documentación mejorada en README.md
+### Arreglado
+- Problemas con la inicialización de la base de datos que impedían la creación de tablas
+- Formato de respuesta del servicio de contactos para que coincida con el esquema esperado
+- Campo de teléfono opcional en el modelo de contactos para permitir valores nulos
+- Errores de importación en los esquemas de contactos
 
 ### Mejorado
-- Script de ejecución original `build_and_run.sh` mantenido para compatibilidad
-- Sistema de detección de intenciones del agente
-- Gestión de contactos con diferentes niveles de interés
-- Interfaz de usuario con mejoras en la visualización de datos
-- Documentación completa del proyecto
+- Script de inicialización de base de datos para crear tablas faltantes
+- Verificación de tablas existentes antes de crear nuevas
+- Manejo de errores en el servicio de contactos
+- Documentación de solución de problemas de base de datos
 
 ### Cambiado
-- Versión actualizada a 2.0.0 para reflejar los cambios significativos
-- Estructura del proyecto actualizada en la documentación
+- Versión actualizada a 1.1.0 para reflejar las correcciones de base de datos y mejoras
 
 ## [1.0.0] - 2025-08-04
 
