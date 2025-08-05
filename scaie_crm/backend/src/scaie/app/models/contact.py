@@ -18,7 +18,7 @@ class Contact(Base):
     
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, nullable=False)
-    phone = Column(String, unique=True, index=True)
+    phone = Column(String, unique=True, index=True, nullable=True)
     email = Column(String, nullable=True)
     company = Column(String, nullable=True)
     notes = Column(Text, nullable=True)

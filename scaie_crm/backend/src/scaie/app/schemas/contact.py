@@ -7,7 +7,7 @@ class ContactBase(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     
     name: str
-    phone: str
+    phone: Optional[str] = None
     email: Optional[str] = None
     company: Optional[str] = None
     notes: Optional[str] = None
@@ -30,32 +30,24 @@ class ContactInDBBase(ContactBase):
 class Contact(ContactInDBBase):
     pass
 
-class ContactSummary(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
-    
-    id: int
-    name: str
-    phone: str
-    interest_level: InterestLevel
-    created_at: str
-    updated_at: str
-
 class ContactList(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     
     contacts: List[Contact]
     total: int
+    skip: int
+    limit: int
 
 class ImportResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     
     success: bool
     message: str
-    imported_count: int
+    imported_count: Optional[int] = None
 
 class ExportResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     
     success: bool
     message: str
-    exported_count: int
+    file_path: Optional[str] = None

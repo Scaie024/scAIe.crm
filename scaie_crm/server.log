@@ -30,442 +30,128 @@
   warnings.warn(message, UserWarning)
 INFO:     Will watch for changes in these directories: ['/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/backend/src/scaie']
 INFO:     Uvicorn running on http://0.0.0.0:8003 (Press CTRL+C to quit)
-INFO:     Started reloader process [97052] using StatReload
+INFO:     Started reloader process [41500] using StatReload
 /Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/pydantic/_internal/_config.py:373: UserWarning: Valid config keys have changed in V2:
 * 'orm_mode' has been renamed to 'from_attributes'
   warnings.warn(message, UserWarning)
-INFO:     Started server process [97196]
+INFO:     Started server process [41523]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
-INFO:     127.0.0.1:58598 - "GET /health HTTP/1.1" 200 OK
-INFO:app.services.llm_service:Generando respuesta para el mensaje: ¿Qué es el workshop de eficiencia con IA?
-INFO:httpx:HTTP Request: POST https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
-INFO:app.services.llm_service:Respuesta del modelo: Es un taller práctico donde aprendes a usar herramientas de inteligencia artificial sin necesidad de programar, para automatizar tareas y mejorar la productividad en tu equipo.  
+INFO:     127.0.0.1:59376 - "GET /api/contacts/ HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1961, in _exec_single_context
+    self.dialect.do_execute(
+  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/sqlalchemy/engine/default.py", line 944, in do_execute
+    cursor.execute(statement, parameters)
+sqlite3.OperationalError: no such table: contacts
 
-¿Te gustaría saber cómo podría aplicarse en tu área o negocio?
-INFO:     127.0.0.1:58609 - "POST /api/chat/ HTTP/1.1" 200 OK
-INFO:app.services.llm_service:Generando respuesta para el mensaje: ¿Cuánto cuesta el workshop?
-INFO:httpx:HTTP Request: POST https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
-INFO:app.services.llm_service:Respuesta del modelo: El workshop tiene un costo de $4,500 MXN por persona, pero si te inscribes antes del 15 de agosto, tienes un descuento del 20%.  
+The above exception was the direct cause of the following exception:
 
-¿Te gustaría que te envíe el temario completo o hablar de fechas disponibles?
-INFO:     127.0.0.1:58617 - "POST /api/chat/ HTTP/1.1" 200 OK
-INFO:app.services.llm_service:Generando respuesta para el mensaje: ¿Cuánto cuesta el workshop?
-INFO:httpx:HTTP Request: POST https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
-INFO:app.services.llm_service:Respuesta del modelo: El workshop tiene un costo de $4,500 MXN por persona. Si te inscribes antes del 15 de agosto, aplicas para un descuento del 20%.  
-
-¿Te gustaría que te comparta más detalles o agendemos una plática?
-INFO:     127.0.0.1:58624 - "POST /api/chat/ HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58641 - "GET /chat HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58641 - "GET /assets/index.58a9d414.css HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58642 - "GET /assets/index.9c91fcfe.js HTTP/1.1" 200 OK
+Traceback (most recent call last):
+  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/uvicorn/protocols/http/h11_impl.py", line 403, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/fastapi/applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/applications.py", line 113, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/middleware/errors.py", line 186, in __call__
+    raise exc
+  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/middleware/cors.py", line 85, in __call__
+    await self.app(scope, receive, send)
+  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/routing.py", line 78, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/routing.py", line 75, in app
+    response = await f(request)
+  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/fastapi/routing.py", line 302, in app
+    raw_response = await run_endpoint_function(
+  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/fastapi/routing.py", line 215, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/concurrency.py", line 38, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/anyio/to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/anyio/_backends/_asyncio.py", line 2476, in run_sync_in_worker_thread
+    return await future
+  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/anyio/_backends/_asyncio.py", line 967, in run
+    result = context.run(func, *args)
+  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/backend/src/scaie/app/api/endpoints/contacts.py", line 23, in list_contacts
+    return contact_service.get_contacts(db, skip=skip, limit=limit, search=search)
+  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/backend/src/scaie/app/services/contact_service.py", line 43, in get_contacts
+    total = query.count()
+  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/sqlalchemy/orm/query.py", line 3146, in count
+    self._legacy_from_self(col).enable_eagerloads(False).scalar()
+  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/sqlalchemy/orm/query.py", line 2835, in scalar
+    ret = self.one()
+  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/sqlalchemy/orm/query.py", line 2808, in one
+    return self._iter().one()  # type: ignore
+  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/sqlalchemy/orm/query.py", line 2857, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/sqlalchemy/orm/session.py", line 2365, in execute
+    return self._execute_internal(
+  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/sqlalchemy/orm/session.py", line 2251, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/sqlalchemy/orm/context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1413, in execute
+    return meth(
+  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/sqlalchemy/sql/elements.py", line 526, in _execute_on_connection
+    return connection._execute_clauseelement(
+  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1635, in _execute_clauseelement
+    ret = self._execute_context(
+  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1840, in _execute_context
+    return self._exec_single_context(
+  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1980, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 2349, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1961, in _exec_single_context
+    self.dialect.do_execute(
+  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/sqlalchemy/engine/default.py", line 944, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such table: contacts
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT contacts.id AS contacts_id, contacts.name AS contacts_name, contacts.phone AS contacts_phone, contacts.email AS contacts_email, contacts.company AS contacts_company, contacts.notes AS contacts_notes, contacts.interest_level AS contacts_interest_level, contacts.telegram_user_id AS contacts_telegram_user_id, contacts.platform_user_id AS contacts_platform_user_id, contacts.created_at AS contacts_created_at, contacts.updated_at AS contacts_updated_at 
+FROM contacts) AS anon_1]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+INFO:     127.0.0.1:59378 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59384 - "GET /api/contacts/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59387 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59392 - "POST /api/contacts/ HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:59400 - "POST /api/contacts/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59405 - "GET /api/contacts/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59409 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59431 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59434 - "GET /api/contacts/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59436 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59445 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59445 - "GET /assets/index.9c91fcfe.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59446 - "GET /assets/index.58a9d414.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59446 - "GET /api/agent/stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59450 - "GET /api/contacts/stats HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:59449 - "GET /api/contacts/?page=1&size=10 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59454 - "GET /api/agent/stats HTTP/1.1" 200 OK
 INFO:app.services.llm_service:Generando respuesta para el mensaje: hola
 INFO:httpx:HTTP Request: POST https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
 INFO:app.services.llm_service:Respuesta del modelo: Hola, ¿en qué puedo ayudarte?
-INFO:     127.0.0.1:58641 - "POST /api/chat/ HTTP/1.1" 200 OK
-INFO:app.services.llm_service:Generando respuesta para el mensaje: quiero saber sobre el workshop 
-INFO:httpx:HTTP Request: POST https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
-INFO:app.services.llm_service:Respuesta del modelo: El workshop "Sé más eficiente con IA" te enseña a usar herramientas de inteligencia artificial sin código, para automatizar tareas y mejorar la productividad en tu equipo.  
-
-¿Te gustaría saber más sobre el temario o fechas disponibles?
-INFO:     127.0.0.1:58651 - "POST /api/chat/ HTTP/1.1" 200 OK
-INFO:app.services.llm_service:Generando respuesta para el mensaje: hablame del temario o como se usa, que me beneficia ?
-INFO:httpx:HTTP Request: POST https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
-INFO:app.services.llm_service:Respuesta del modelo: El temario incluye:  
-1. Introducción a la IA sin código  
-2. Herramientas prácticas para automatizar tareas  
-3. Casos de uso por departamento (ventas, marketing, operaciones)  
-4. Análisis de datos con IA accesible  
-5. Proyectos reales en equipo  
-
-Te beneficia al mejorar la productividad de tu equipo sin necesidad de experiencia técnica previa.  
-
-¿Quieres que te envíe el temario completo o agendamos una plática?
-INFO:     127.0.0.1:58654 - "POST /api/chat/ HTTP/1.1" 200 OK
-INFO:app.services.llm_service:Generando respuesta para el mensaje: agendemos una conversacion
-INFO:httpx:HTTP Request: POST https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
-INFO:app.services.llm_service:Respuesta del modelo: Perfecto, ¿qué día y hora te quedan mejor para platicar sobre el workshop?
-INFO:     127.0.0.1:58661 - "POST /api/chat/ HTTP/1.1" 200 OK
-INFO:app.services.llm_service:Generando respuesta para el mensaje: jueves a las 11 de la noche
-INFO:httpx:HTTP Request: POST https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
-INFO:app.services.llm_service:Respuesta del modelo: El jueves a las 11 PM está disponible. Te enviaré un recordatorio con el enlace de la reunión.  
-
-¿Necesitas que te comparta algo adicional antes de nuestra plática?
-INFO:     127.0.0.1:58665 - "POST /api/chat/ HTTP/1.1" 200 OK
-INFO:app.services.llm_service:Generando respuesta para el mensaje: no, muchas gracias 
-INFO:httpx:HTTP Request: POST https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
-INFO:app.services.llm_service:Respuesta del modelo: Perfecto, te confirmo la reunión el jueves a las 11 PM. Nos vemos ahí.
-INFO:     127.0.0.1:58669 - "POST /api/chat/ HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58673 - "GET /api/agent/stats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58674 - "GET /api/contacts/stats HTTP/1.1" 422 Unprocessable Entity
-INFO:     127.0.0.1:58673 - "GET /api/contacts/?page=1&size=10 HTTP/1.1" 500 Internal Server Error
-ERROR:    Exception in ASGI application
-Traceback (most recent call last):
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/uvicorn/protocols/http/h11_impl.py", line 403, in run_asgi
-    result = await app(  # type: ignore[func-returns-value]
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
-    return await self.app(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/fastapi/applications.py", line 1054, in __call__
-    await super().__call__(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/applications.py", line 113, in __call__
-    await self.middleware_stack(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/middleware/errors.py", line 186, in __call__
-    raise exc
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/middleware/errors.py", line 164, in __call__
-    await self.app(scope, receive, _send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/middleware/cors.py", line 85, in __call__
-    await self.app(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
-    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
-    raise exc
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
-    await app(scope, receive, sender)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/routing.py", line 716, in __call__
-    await self.middleware_stack(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/routing.py", line 736, in app
-    await route.handle(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/routing.py", line 290, in handle
-    await self.app(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/routing.py", line 78, in app
-    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
-    raise exc
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
-    await app(scope, receive, sender)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/routing.py", line 75, in app
-    response = await f(request)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/fastapi/routing.py", line 328, in app
-    content = await serialize_response(
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/fastapi/routing.py", line 177, in serialize_response
-    raise ResponseValidationError(
-fastapi.exceptions.ResponseValidationError: 10 validation errors:
-  {'type': 'string_type', 'loc': ('response', 'contacts', 3, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 4, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 5, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 6, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 7, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 8, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 9, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 10, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 11, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 12, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-
-INFO:     127.0.0.1:58674 - "GET /api/contacts/?page=1&size=10 HTTP/1.1" 500 Internal Server Error
-ERROR:    Exception in ASGI application
-Traceback (most recent call last):
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/uvicorn/protocols/http/h11_impl.py", line 403, in run_asgi
-    result = await app(  # type: ignore[func-returns-value]
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
-    return await self.app(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/fastapi/applications.py", line 1054, in __call__
-    await super().__call__(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/applications.py", line 113, in __call__
-    await self.middleware_stack(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/middleware/errors.py", line 186, in __call__
-    raise exc
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/middleware/errors.py", line 164, in __call__
-    await self.app(scope, receive, _send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/middleware/cors.py", line 85, in __call__
-    await self.app(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
-    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
-    raise exc
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
-    await app(scope, receive, sender)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/routing.py", line 716, in __call__
-    await self.middleware_stack(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/routing.py", line 736, in app
-    await route.handle(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/routing.py", line 290, in handle
-    await self.app(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/routing.py", line 78, in app
-    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
-    raise exc
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
-    await app(scope, receive, sender)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/routing.py", line 75, in app
-    response = await f(request)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/fastapi/routing.py", line 328, in app
-    content = await serialize_response(
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/fastapi/routing.py", line 177, in serialize_response
-    raise ResponseValidationError(
-fastapi.exceptions.ResponseValidationError: 10 validation errors:
-  {'type': 'string_type', 'loc': ('response', 'contacts', 3, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 4, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 5, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 6, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 7, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 8, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 9, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 10, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 11, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 12, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-
-INFO:     127.0.0.1:58676 - "GET /api/contacts/?page=1&size=10 HTTP/1.1" 500 Internal Server Error
-ERROR:    Exception in ASGI application
-Traceback (most recent call last):
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/uvicorn/protocols/http/h11_impl.py", line 403, in run_asgi
-    result = await app(  # type: ignore[func-returns-value]
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
-    return await self.app(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/fastapi/applications.py", line 1054, in __call__
-    await super().__call__(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/applications.py", line 113, in __call__
-    await self.middleware_stack(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/middleware/errors.py", line 186, in __call__
-    raise exc
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/middleware/errors.py", line 164, in __call__
-    await self.app(scope, receive, _send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/middleware/cors.py", line 85, in __call__
-    await self.app(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
-    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
-    raise exc
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
-    await app(scope, receive, sender)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/routing.py", line 716, in __call__
-    await self.middleware_stack(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/routing.py", line 736, in app
-    await route.handle(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/routing.py", line 290, in handle
-    await self.app(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/routing.py", line 78, in app
-    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
-    raise exc
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
-    await app(scope, receive, sender)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/routing.py", line 75, in app
-    response = await f(request)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/fastapi/routing.py", line 328, in app
-    content = await serialize_response(
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/fastapi/routing.py", line 177, in serialize_response
-    raise ResponseValidationError(
-fastapi.exceptions.ResponseValidationError: 10 validation errors:
-  {'type': 'string_type', 'loc': ('response', 'contacts', 3, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 4, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 5, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 6, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 7, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 8, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 9, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 10, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 11, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 12, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-
-INFO:     127.0.0.1:58678 - "GET /api/contacts/?page=1&size=10 HTTP/1.1" 500 Internal Server Error
-ERROR:    Exception in ASGI application
-Traceback (most recent call last):
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/uvicorn/protocols/http/h11_impl.py", line 403, in run_asgi
-    result = await app(  # type: ignore[func-returns-value]
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
-    return await self.app(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/fastapi/applications.py", line 1054, in __call__
-    await super().__call__(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/applications.py", line 113, in __call__
-    await self.middleware_stack(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/middleware/errors.py", line 186, in __call__
-    raise exc
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/middleware/errors.py", line 164, in __call__
-    await self.app(scope, receive, _send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/middleware/cors.py", line 85, in __call__
-    await self.app(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
-    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
-    raise exc
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
-    await app(scope, receive, sender)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/routing.py", line 716, in __call__
-    await self.middleware_stack(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/routing.py", line 736, in app
-    await route.handle(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/routing.py", line 290, in handle
-    await self.app(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/routing.py", line 78, in app
-    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
-    raise exc
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
-    await app(scope, receive, sender)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/routing.py", line 75, in app
-    response = await f(request)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/fastapi/routing.py", line 328, in app
-    content = await serialize_response(
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/fastapi/routing.py", line 177, in serialize_response
-    raise ResponseValidationError(
-fastapi.exceptions.ResponseValidationError: 10 validation errors:
-  {'type': 'string_type', 'loc': ('response', 'contacts', 3, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 4, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 5, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 6, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 7, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 8, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 9, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 10, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 11, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 12, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-
-INFO:     127.0.0.1:58680 - "GET /api/contacts/?page=1&size=10 HTTP/1.1" 500 Internal Server Error
-ERROR:    Exception in ASGI application
-Traceback (most recent call last):
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/uvicorn/protocols/http/h11_impl.py", line 403, in run_asgi
-    result = await app(  # type: ignore[func-returns-value]
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
-    return await self.app(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/fastapi/applications.py", line 1054, in __call__
-    await super().__call__(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/applications.py", line 113, in __call__
-    await self.middleware_stack(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/middleware/errors.py", line 186, in __call__
-    raise exc
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/middleware/errors.py", line 164, in __call__
-    await self.app(scope, receive, _send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/middleware/cors.py", line 85, in __call__
-    await self.app(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
-    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
-    raise exc
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
-    await app(scope, receive, sender)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/routing.py", line 716, in __call__
-    await self.middleware_stack(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/routing.py", line 736, in app
-    await route.handle(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/routing.py", line 290, in handle
-    await self.app(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/routing.py", line 78, in app
-    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
-    raise exc
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
-    await app(scope, receive, sender)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/routing.py", line 75, in app
-    response = await f(request)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/fastapi/routing.py", line 328, in app
-    content = await serialize_response(
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/fastapi/routing.py", line 177, in serialize_response
-    raise ResponseValidationError(
-fastapi.exceptions.ResponseValidationError: 10 validation errors:
-  {'type': 'string_type', 'loc': ('response', 'contacts', 3, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 4, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 5, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 6, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 7, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 8, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 9, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 10, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 11, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 12, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-
-INFO:     127.0.0.1:58682 - "GET /api/contacts/?page=1&size=10 HTTP/1.1" 500 Internal Server Error
-ERROR:    Exception in ASGI application
-Traceback (most recent call last):
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/uvicorn/protocols/http/h11_impl.py", line 403, in run_asgi
-    result = await app(  # type: ignore[func-returns-value]
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
-    return await self.app(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/fastapi/applications.py", line 1054, in __call__
-    await super().__call__(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/applications.py", line 113, in __call__
-    await self.middleware_stack(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/middleware/errors.py", line 186, in __call__
-    raise exc
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/middleware/errors.py", line 164, in __call__
-    await self.app(scope, receive, _send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/middleware/cors.py", line 85, in __call__
-    await self.app(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
-    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
-    raise exc
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
-    await app(scope, receive, sender)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/routing.py", line 716, in __call__
-    await self.middleware_stack(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/routing.py", line 736, in app
-    await route.handle(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/routing.py", line 290, in handle
-    await self.app(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/routing.py", line 78, in app
-    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
-    raise exc
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
-    await app(scope, receive, sender)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/routing.py", line 75, in app
-    response = await f(request)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/fastapi/routing.py", line 328, in app
-    content = await serialize_response(
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/fastapi/routing.py", line 177, in serialize_response
-    raise ResponseValidationError(
-fastapi.exceptions.ResponseValidationError: 10 validation errors:
-  {'type': 'string_type', 'loc': ('response', 'contacts', 3, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 4, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 5, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 6, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 7, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 8, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 9, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 10, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 11, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 12, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-
-INFO:     127.0.0.1:58684 - "GET /api/contacts/?page=1&size=10 HTTP/1.1" 500 Internal Server Error
-ERROR:    Exception in ASGI application
-Traceback (most recent call last):
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/uvicorn/protocols/http/h11_impl.py", line 403, in run_asgi
-    result = await app(  # type: ignore[func-returns-value]
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
-    return await self.app(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/fastapi/applications.py", line 1054, in __call__
-    await super().__call__(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/applications.py", line 113, in __call__
-    await self.middleware_stack(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/middleware/errors.py", line 186, in __call__
-    raise exc
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/middleware/errors.py", line 164, in __call__
-    await self.app(scope, receive, _send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/middleware/cors.py", line 85, in __call__
-    await self.app(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
-    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
-    raise exc
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
-    await app(scope, receive, sender)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/routing.py", line 716, in __call__
-    await self.middleware_stack(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/routing.py", line 736, in app
-    await route.handle(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/routing.py", line 290, in handle
-    await self.app(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/routing.py", line 78, in app
-    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
-    raise exc
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
-    await app(scope, receive, sender)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/starlette/routing.py", line 75, in app
-    response = await f(request)
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/fastapi/routing.py", line 328, in app
-    content = await serialize_response(
-  File "/Users/arturopinzon/Desktop/scAIe - Sistema Agente/scaie_crm/venv/lib/python3.9/site-packages/fastapi/routing.py", line 177, in serialize_response
-    raise ResponseValidationError(
-fastapi.exceptions.ResponseValidationError: 10 validation errors:
-  {'type': 'string_type', 'loc': ('response', 'contacts', 3, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 4, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 5, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 6, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 7, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 8, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 9, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 10, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 11, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-  {'type': 'string_type', 'loc': ('response', 'contacts', 12, 'phone'), 'msg': 'Input should be a valid string', 'input': None}
-
+INFO:     127.0.0.1:59457 - "POST /api/chat/ HTTP/1.1" 200 OK

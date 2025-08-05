@@ -46,8 +46,8 @@ class ContactService:
         return {
             "contacts": [contact.to_dict() for contact in contacts],
             "total": total,
-            "page": skip // limit + 1,
-            "size": limit
+            "skip": skip,
+            "limit": limit
         }
     
     def get_contact(self, db: Session, contact_id: int) -> Optional[Contact]:
