@@ -1,113 +1,168 @@
-# SCAIE Agent Functionality Documentation
+# SCAIE Agent Functionality
 
 ## Overview
 
-The SCAIE system features two main agent implementations:
+The SCAIE Agent is an intelligent conversational agent designed to sell the "Sé más eficiente con IA" workshop with a direct, human-like approach. The agent combines advanced natural language processing with CRM capabilities to provide a personalized sales experience.
 
-1. **Basic LLM Service** - A simple interface to the Qwen language model
-2. **Omnipotent Agent** - An advanced agent with full CRM integration and action processing capabilities
+## Core Capabilities
 
-## Omnipotent Agent
+### 1. Workshop Sales Expertise
 
-The Omnipotent Agent is the core intelligence of the SCAIE system. It provides advanced functionality beyond simple chat responses, including:
+The agent is specifically trained to sell the "Sé más eficiente con IA" workshop with these key features:
 
-### Key Features
+- **Target Audience**: Teams using manual processes, Excel, email, etc.
+- **Duration**: 2-4 hours (customizable)
+- **Format**: Live online or in-person sessions
+- **Key Outcomes**: 
+  - At least 3 active AI tools implemented
+  - One optimized workflow
+  - Personalized implementation plan
 
-- **Contact Management**: Automatically creates and updates contact records
-- **Interest Level Tracking**: Tracks and updates contact interest levels based on conversation content
-- **Action Processing**: Determines and executes appropriate actions based on message content
-- **Task Management**: Creates and manages follow-up tasks
-- **Conversation Context**: Maintains conversation history and context
-- **Multi-platform Support**: Works across web, WhatsApp, Telegram, and other platforms
+### 2. Direct Sales Approach
 
-### API Endpoints
+The agent uses a concise, human-like communication style:
 
-#### Process Message
-- **Endpoint**: `POST /api/omnipotent-agent/process-message`
-- **Description**: Processes an incoming message and generates an appropriate response with actions
-- **Request Body**:
-  ```json
-  {
-    "message": "string",
-    "platform": "string",
-    "contact_info": {
-      "name": "string (optional)",
-      "phone": "string (optional)",
-      "email": "string (optional)",
-      "company": "string (optional)",
-      "platform_user_id": "string (optional)"
-    }
-  }
-  ```
-- **Response**:
-  ```json
-  {
-    "response": "string",
-    "contact_id": "integer",
-    "message_id": "integer",
-    "actions": "array",
-    "executed_actions": "array"
-  }
-  ```
+1. **Listen First**: Identify client needs and pain points
+2. **Connect Value**: Link problems with AI solutions
+3. **Provide Evidence**: Share relevant testimonials and results
+4. **Handle Objections**: Address concerns with empathy
+5. **Close Conversations**: Guide toward scheduling or purchasing
 
-#### Execute Pending Actions
-- **Endpoint**: `POST /api/omnipotent-agent/execute-pending-actions/{conversation_id}`
-- **Description**: Executes all pending actions for a conversation
-- **Response**:
-  ```json
-  {
-    "results": "array"
-  }
-  ```
+### 3. CRM Integration
 
-### Agent Capabilities
+The agent maintains detailed contact records:
 
-#### Contact Management
-The agent automatically manages contact information:
-- Creates new contacts when they don't exist
-- Updates existing contact information
-- Tracks contact interest levels (NEW, LOW, MEDIUM, HIGH, CLIENT)
+- **Interest Level Tracking**: Automatically updates from NEW to INTERESTED to CONFIRMED
+- **Conversation History**: Maintains context across multiple interactions
+- **Action Items**: Creates tasks for follow-up activities
+- **Contact Information**: Stores name, phone, email, company, and role
 
-#### Action Processing
-The agent can determine and process various actions:
-- Sending materials (brochures, documents)
-- Scheduling appointments
-- Creating follow-up tasks
-- Escalating to human agents
+### 4. Multi-Channel Support
 
-#### Conversation Context
-The agent maintains context throughout conversations:
-- Remembers previous messages in the conversation
-- Tracks conversation state
-- Uses context to provide more relevant responses
+The agent works across multiple platforms:
 
-## Integration with Frontend
+- **Web Chat**: Integrated chat widget on the SCAIE website
+- **WhatsApp**: Direct messaging through WhatsApp Business API
+- **Facebook Messenger**: Integration with Facebook pages
+- **Telegram**: Bot integration for Telegram users
 
-The frontend chat interface uses the Omnipotent Agent endpoint to provide a full-featured chat experience:
-- Messages are sent to `/api/omnipotent-agent/process-message`
-- Contact information is included with each message
-- Responses include both the agent's reply and any actions to be taken
+## Workshop Details
 
-## Database Integration
+### What is "Sé más eficiente con IA"?
 
-The agent works with the following database models:
-- **Contact**: Stores contact information and interest levels
-- **Conversation**: Tracks conversation history
-- **Message**: Stores individual messages
-- **AgentAction**: Records actions determined by the agent
-- **AgentTask**: Manages follow-up tasks
+This intensive workshop is designed for teams who want to start using artificial intelligence in their daily work. Through practical exercises, real cases, and specific tools, participants learn to automate tasks, analyze information, and generate content with AI, without requiring prior technical knowledge.
 
-## Configuration
+### Key Workshop Components
 
-The agent can be configured through environment variables:
-- `AGENT_NAME`: The name of the agent
-- `AGENT_PERSONALITY`: Personality traits of the agent
-- `AGENT_TONE`: Communication tone
-- `AGENT_GOAL`: Primary goal of the agent
+1. **Introduction to Generative AI**: Practical applications for business
+2. **Task Automation**: Streamlining repetitive work processes
+3. **Data Analysis**: Creating reports and insights from data
+4. **Content Creation**: Using AI for marketing and communication
+5. **Project Management**: AI assistants for task coordination
+6. **Opportunity Identification**: Finding automation opportunities in your business
 
-## Best Practices
+### Workshop Packages
 
-1. **Use the Omnipotent Agent**: For full functionality, always use the omnipotent agent endpoint rather than the basic chat endpoint
-2. **Provide Contact Information**: Always include contact information with messages for proper tracking
-3. **Process Actions**: Implement action processing in your frontend to take advantage of agent capabilities
-4. **Monitor Interest Levels**: Use the contact management features to track and respond to customer interest
+1. **Basic Package** ($1,499 MXN)
+   - 2-hour session for up to 10 people
+   - Online live format
+   - Workshop manual
+   - Session recording
+
+2. **Professional Package** ($2,999 MXN)
+   - 4-hour comprehensive session for up to 20 people
+   - Online or in-person format
+   - Pre-workshop assessment
+   - Personalized workshop manual
+   - Session recording
+   - 30-minute follow-up session
+
+3. **Enterprise Package** (Custom Pricing)
+   - Multiple customized sessions
+   - Detailed process diagnosis
+   - Guided solution implementation
+   - 30-day post-workshop support
+   - Impact report
+
+## Agent Communication Style
+
+### Direct and Concise
+
+The agent follows these communication principles:
+
+- **Short Responses**: 1-2 sentences maximum
+- **Human Tone**: Natural, conversational language
+- **No Emojis**: Professional text-only communication
+- **Action-Oriented**: Always moving toward scheduling or next steps
+
+### Value-Focused Messaging
+
+The agent emphasizes these key value propositions:
+
+1. **No Coding Required**: Tools that anyone can use
+2. **Immediate Results**: See benefits in the first session
+3. **Department Wide**: Works for sales, admin, management
+4. **Freemium Tools**: Start with free tools, scale as needed
+
+## Action System
+
+The agent can perform various automated actions:
+
+### Immediate Actions
+- Escalate to human agent when requested
+- Update contact interest levels
+- Create tasks for follow-up
+
+### Pending Actions
+- Send workshop materials
+- Schedule appointments
+- Generate quotes
+- Send testimonials
+- Provide diagnostic assessments
+
+## Integration Capabilities
+
+### Backend Systems
+- Contact database management
+- Conversation history storage
+- Task and action tracking
+- Interest level monitoring
+
+### External Services
+- WhatsApp Business API
+- Facebook Messenger API
+- Telegram Bot API
+- Email marketing platforms
+- Calendar scheduling systems
+
+## Performance Metrics
+
+The agent tracks key performance indicators:
+
+- Conversation engagement rates
+- Interest level progression
+- Action completion rates
+- Conversion to scheduled appointments
+- Conversion to workshop purchases
+
+## Future Enhancements
+
+Planned improvements include:
+
+1. **Enhanced Industry Expertise**: Industry-specific knowledge bases
+2. **Advanced Analytics**: Predictive lead scoring
+3. **Multi-language Support**: Spanish, English, and Portuguese capabilities
+4. **Voice Integration**: Audio message processing
+5. **Visual Content**: Image and document analysis capabilities
+
+## Technical Architecture
+
+The agent is built with a modular architecture:
+
+1. **Natural Language Processing Layer**: Qwen (Aliyun Dashscope)
+2. **Business Logic Layer**: Custom Python services
+3. **Data Layer**: SQLite with SQLAlchemy ORM
+4. **API Layer**: FastAPI REST endpoints
+5. **Frontend Layer**: Vue.js web interface
+
+This architecture allows for easy updates and enhancements while maintaining high performance and reliability.

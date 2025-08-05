@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Dashboard from '../views/Dashboard.vue'
-import Chat from '../views/Chat.vue'
-import Contacts from '../views/Contacts.vue'
+import Dashboard from '../pages/Dashboard.vue'
+import Chat from '../pages/Chat.vue'
+import Contacts from '../pages/Contacts.vue'
 
 const routes = [
   {

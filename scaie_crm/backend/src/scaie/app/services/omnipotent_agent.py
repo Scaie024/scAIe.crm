@@ -1,7 +1,7 @@
 import re
 from typing import Dict, List, Any, Optional
 from sqlalchemy.orm import Session
-from sqlalchemy import and_, or_
+from sqlalchemy import and_, or_, func
 
 from ..core.database import get_db
 from ..models.contact import Contact, InterestLevel
@@ -9,6 +9,7 @@ from ..models.conversation import Conversation, Message
 from ..models.agent_action import AgentAction, AgentTask
 from ..services.llm_service import llm_service
 from ..services.scaie_knowledge import scaie_knowledge
+from ..services.workshop_knowledge import workshop_knowledge_instance
 
 class OmnipotentAgent:
     def __init__(self):
@@ -202,44 +203,56 @@ class OmnipotentAgent:
         actions = []
         message_lower = message.lower()
         
-        # Action: Send material (brochure, etc.)
-        if any(keyword in message_lower for keyword in ["folleto", "brochure", "información", "informacion", "detalles", "saber más", "saber mas"]):
+        # Action: Send workshop material (brochure, etc.)
+        if any(keyword in message_lower for keyword in ["folleto", "brochure", "información", "informacion", "detalles", "saber más", "saber mas", "más info", "mas info"]):
             actions.append({
-                "type": "send_material",
+                "type": "send_workshop_material",
                 "parameters": {
                     "material_type": "workshop_brochure",
                     "recipient": "user"
                 },
                 "execute_immediately": False,
-                "description": "Enviar folleto del workshop"
+                "description": "Enviar folleto del workshop 'Sé más eficiente con IA'"
             })
         
-        # Action: Schedule appointment
-        if any(keyword in message_lower for keyword in ["agendar", "cita", "reunión", "reunion", "consultoría", "consultoria", "asesoría", "asesoria"]):
+        # Action: Schedule workshop appointment
+        if any(keyword in message_lower for keyword in ["agendar", "cita", "reunión", "reunion", "consultoría", "consultoria", "asesoría", "asesoria", "demo", "demostración", "demostracion", "prueba"]):
             actions.append({
-                "type": "schedule_appointment",
+                "type": "schedule_workshop_appointment",
                 "parameters": {
                     "appointment_type": "workshop_consultation",
                     "duration": 30
                 },
                 "execute_immediately": False,
-                "description": "Agendar consulta para el workshop"
+                "description": "Agendar consulta para el workshop 'Sé más eficiente con IA'"
             })
         
-        # Action: Generate quote
-        if any(keyword in message_lower for keyword in ["precio", "costo", "cuánto", "cuanto", "presupuesto"]):
+        # Action: Generate workshop quote
+        if any(keyword in message_lower for keyword in ["precio", "costo", "cuánto", "cuanto", "presupuesto", "inversión", "invertir"]):
             actions.append({
-                "type": "generate_quote",
+                "type": "generate_workshop_quote",
                 "parameters": {
                     "service_type": "workshop",
                     "contact_id": contact.id
                 },
                 "execute_immediately": False,
-                "description": "Generar cotización para el workshop"
+                "description": "Generar cotización para el workshop 'Sé más eficiente con IA'"
+            })
+        
+        # Action: Send workshop testimonial
+        if any(keyword in message_lower for keyword in ["ejemplo", "caso", "testimonio", "experiencia", "resultados"]):
+            actions.append({
+                "type": "send_workshop_testimonial",
+                "parameters": {
+                    "testimonial_type": "workshop_success_story",
+                    "recipient": "user"
+                },
+                "execute_immediately": False,
+                "description": "Enviar testimonio de éxito del workshop"
             })
         
         # Action: Escalate to human
-        if any(keyword in message_lower for keyword in ["humano", "persona", "asesor", "representante"]):
+        if any(keyword in message_lower for keyword in ["humano", "persona", "asesor", "representante", "vendedor", "comercial"]):
             actions.append({
                 "type": "escalate_to_human",
                 "parameters": {
@@ -250,28 +263,40 @@ class OmnipotentAgent:
                 "description": "Escalar conversación a agente humano"
             })
         
-        # If no specific actions identified, but message shows interest, send material
-        if not actions and any(keyword in message_lower for keyword in ["interesado", "interés", "interes", "quiero", "necesito", "me sirve"]):
+        # Action: Send diagnostic assessment
+        if any(keyword in message_lower for keyword in ["diagnóstico", "diagnostico", "evaluación", "evaluacion", "análisis", "analisis"]):
             actions.append({
-                "type": "send_material",
+                "type": "send_diagnostic_assessment",
+                "parameters": {
+                    "assessment_type": "workshop_assessment",
+                    "recipient": "user"
+                },
+                "execute_immediately": False,
+                "description": "Enviar diagnóstico previo del workshop"
+            })
+        
+        # If no specific actions identified, but message shows interest, send material
+        if not actions and any(keyword in message_lower for keyword in ["interesado", "interés", "interes", "quiero", "necesito", "me sirve", "aplica", "ayuda", "solución", "solucion"]):
+            actions.append({
+                "type": "send_workshop_material",
                 "parameters": {
                     "material_type": "workshop_brochure",
                     "recipient": "user"
                 },
                 "execute_immediately": False,
-                "description": "Enviar folleto del workshop"
+                "description": "Enviar folleto del workshop 'Sé más eficiente con IA'"
             })
         
         # Default action if no other actions identified
         if not actions:
             actions.append({
-                "type": "send_material",
+                "type": "send_workshop_material",
                 "parameters": {
                     "material_type": "workshop_brochure",
                     "recipient": "user"
                 },
                 "execute_immediately": False,
-                "description": "Enviar folleto del workshop"
+                "description": "Enviar folleto del workshop 'Sé más eficiente con IA'"
             })
         
         return actions
@@ -342,11 +367,11 @@ class OmnipotentAgent:
         message_lower = message.lower()
         
         # Update interest level based on keywords
-        if any(keyword in message_lower for keyword in ["no estoy interesado", "no me interesa", "no gracias"]):
+        if any(keyword in message_lower for keyword in ["no estoy interesado", "no me interesa", "no gracias", "no quiero"]):
             contact.interest_level = InterestLevel.NOT_INTERESTED
-        elif any(keyword in message_lower for keyword in ["estoy interesado", "me interesa", "quiero saber más", "quiero saber mas", "quiero información", "quiero informacion"]):
+        elif any(keyword in message_lower for keyword in ["estoy interesado", "me interesa", "quiero saber más", "quiero saber mas", "quiero información", "quiero informacion", "agendar", "cita", "demo"]):
             contact.interest_level = InterestLevel.INTERESTED
-        elif any(keyword in message_lower for keyword in ["agendar", "cita", "reunión", "reunion"]):
+        elif any(keyword in message_lower for keyword in ["agendar", "cita", "reunión", "reunion", "cuando", "horario"]):
             contact.interest_level = InterestLevel.CONFIRMED
         elif contact.interest_level == InterestLevel.NEW:
             contact.interest_level = InterestLevel.CONTACTED

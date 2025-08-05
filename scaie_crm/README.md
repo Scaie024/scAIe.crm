@@ -1,58 +1,104 @@
-# SCAIE - Sistema Agente Conversacional Inteligente Empresarial
+# SCAIE - Sistema Agente Conversacional para Ventas con IA
 
-[![Python](https://img.shields.io/badge/Python-3.8%2B-blue)](https://www.python.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.68.0%2B-green)](https://fastapi.tiangolo.com/)
-[![Vue.js](https://img.shields.io/badge/Vue.js-3.x-green)](https://vuejs.org/)
-[![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
+<p align="center">
+  <img src="docs/assets/scaie-logo.png" alt="SCAIE Logo" width="200"/>
+</p>
 
-SCAIE (Sistema Agente Conversacional Inteligente Empresarial) is an intelligent conversational agent platform designed for business automation, particularly focused on sales processes. The system combines CRM functionality with AI-powered conversations to provide a complete solution for automated customer engagement.
+SCAIE (Sistema Conversacional con Agente Inteligente Empresarial) es una plataforma avanzada de agentes conversacionales basada en inteligencia artificial que ayuda a las empresas a automatizar ventas, mejorar la atención al cliente y optimizar procesos mediante la automatización inteligente.
 
-## 🌟 Key Features
+## Características Principales
 
-- **CRM Functionality**: Contact management with interest level tracking
-- **AI-Powered Conversational Agent**: Using Qwen (Alibaba's language model) for natural conversations
-- **Multi-Platform Support**: Web, Telegram, and WhatsApp integration
-- **Task Management**: Built-in task tracking for follow-ups
-- **Analytics Dashboard**: KPIs and metrics visualization
-- **RESTful API**: Well-documented API for integration
-- **Omnipotent Agent**: Advanced agent with action processing and contact management capabilities
+### 🤖 Agente Conversacional Inteligente Especializado en Ventas de Workshops
 
-## 🏗️ Architecture
+El agente de SCAIE está especialmente entrenado para vender el workshop **"Sé más eficiente con IA"**, una solución práctica para que los equipos aprendan a usar inteligencia artificial en sus procesos diarios.
 
-The system follows a modern client-server architecture:
+**Capacidades del Agente:**
+- **Ventas Consultivas**: Técnicas avanzadas de descubrimiento, manejo de objeciones y cierre
+- **Personalización**: Adaptación de mensajes según el perfil del cliente
+- **Contexto**: Mantenimiento de conversaciones coherentes a través de múltiples interacciones
+- **Multi-Canal**: Funciona en WhatsApp, Facebook Messenger, Web Chat y Telegram
 
-- **Frontend**: Vue.js 3 with Tailwind CSS
-- **Backend**: Python FastAPI
-- **Database**: SQLite with SQLAlchemy ORM
-- **AI Integration**: Qwen (Alibaba Cloud) via DashScope API
-- **Deployment**: Docker-ready with Nginx configuration
+### 📊 Panel de Administración Completo
 
-## 🚀 Quick Start
+- Dashboard con KPIs de ventas y métricas de agentes
+- Gestión de contactos con niveles de interés (Nuevo, Contactado, Interesado, Confirmado, No Interesado)
+- Visualización de conversaciones en tiempo real
+- Gestión de tareas y seguimiento de leads
+- Importación/Exportación de datos (CSV, JSON)
 
-### Prerequisites
+### 🔧 Tecnología de Vanguardia
 
-- Python 3.8 or higher
-- Node.js 14 or higher (for frontend development)
-- npm (Node Package Manager)
+- Backend en Python/FastAPI con SQLite
+- Frontend en Vue 3 con Vite y TailwindCSS
+- Integración con Qwen (Aliyun Dashscope) para procesamiento de lenguaje natural
+- Arquitectura modular y escalable
 
-### Using the Complete Run Script (Recommended)
+## Workshop "Sé más eficiente con IA"
 
-The easiest way to run the complete system is using our new comprehensive script:
+### ¿De qué trata?
+
+Un workshop intensivo diseñado para equipos que quieren empezar a usar inteligencia artificial en su trabajo diario. A través de ejercicios prácticos, casos reales y herramientas específicas, los participantes aprenden a automatizar tareas, analizar información y generar contenido con IA, sin necesidad de conocimientos técnicos previos.
+
+### Resultados Esperados
+
+- Al menos 3 herramientas de IA activas y funcionando
+- Un proceso de trabajo automatizado
+- Plantillas y prompts personalizados para el equipo
+- Plan de implementación de IA en la organización
+
+### Modalidades
+
+- **Básico** ($1,499 MXN): 2 horas, online en vivo, hasta 10 personas
+- **Profesional** ($2,999 MXN): 4 horas, online o presencial, hasta 20 personas
+- **Empresarial** (Precio personalizado): Implementación completa con múltiples sesiones
+
+## Requisitos del Sistema
+
+- Python 3.8+
+- Node.js 14+
+- npm 6+
+- SQLite (incluido) o MySQL
+
+## Instalación y Configuración
+
+### Método 1: Ejecución Directa (Recomendado para desarrollo)
+
+1. Clonar el repositorio:
+```bash
+git clone https://github.com/Scaie024/scAIe.crm.git
+cd scAIe.crm
+```
+
+2. Ejecutar el script de configuración:
+```bash
+chmod +x setup.sh
+./setup.sh
+```
+
+3. Configurar las variables de entorno:
+```bash
+cp .env.example .env
+# Editar .env con tus credenciales de API
+```
+
+4. Ejecutar la aplicación:
+```bash
+chmod +x run_app.sh
+./run_app.sh
+```
+
+### Método 2: Ejecución Completa (Recomendado para producción)
 
 ```bash
-# Make the script executable
 chmod +x run_complete.sh
-
-# Run the complete system
 ./run_complete.sh
 ```
 
-This script will:
-1. Set up a Python virtual environment
-2. Install all backend and frontend dependencies
-3. Build the frontend
-4. Check environment configuration
-5. Start the application on port 8003
+Este script realiza todas las tareas necesarias:
+- Configuración del entorno virtual
+- Instalación de dependencias backend y frontend
+- Construcción del frontend
+- Inicio del servidor backend en el puerto 8003
 
 ### Manual Setup
 
@@ -114,96 +160,89 @@ If you prefer to set up the system manually:
    python3 -m app.main
    ```
 
-## 🖥️ Accessing the Application
+## Uso
 
-Once the application is running, you can access:
+Una vez iniciado el servidor:
 
-- **Web Interface**: http://localhost:8003
-- **API Documentation**: http://localhost:8003/docs
-- **Health Check**: http://localhost:8003/health
+1. Accede a la interfaz web: http://localhost:8003
+2. Usa la sección de chat para probar el agente
+3. Explora el dashboard para ver métricas y contactos
+4. Configura integraciones con WhatsApp/Facebook según necesites
 
-## 🧪 Testing the Agent
+## Endpoints de la API
 
-You can test the agent functionality using the web interface chat or via API calls:
+- Documentación de la API: http://localhost:8003/docs
+- Health check: http://localhost:8003/health
+- Chat endpoint: http://localhost:8003/api/chat/
+- Endpoint del agente omnipotente: http://localhost:8003/api/omnipotent-agent/
 
-### Using the Web Interface
-1. Navigate to http://localhost:8003
-2. Go to the "Chat de Pruebas del Agente" section
-3. Enter messages to interact with the agent
-
-### Using the API
-You can test the agent directly via API calls:
-
-```bash
-# Test the basic chat endpoint
-curl -X POST http://localhost:8003/api/chat/ \
-  -H "Content-Type: application/json" \
-  -d '{"message": "Hola", "contact_info": {"phone": "+525512345678", "name": "Cliente de Prueba"}}'
-
-# Test the omnipotent agent endpoint (recommended)
-curl -X POST http://localhost:8003/api/omnipotent-agent/process-message \
-  -H "Content-Type: application/json" \
-  -d '{
-    "message": "Hola",
-    "platform": "web",
-    "contact_info": {
-      "phone": "+525512345678",
-      "name": "Cliente de Prueba"
-    }
-  }'
-```
-
-## 📁 Project Structure
+## Arquitectura del Sistema
 
 ```
 scaie_crm/
 ├── backend/
 │   ├── src/scaie/
 │   │   ├── app/
-│   │   │   ├── api/          # API endpoints
-│   │   │   ├── core/         # Core application components
-│   │   │   ├── models/       # Database models
-│   │   │   ├── schemas/      # Pydantic schemas
-│   │   │   ├── services/     # Business logic services
-│   │   │   └── main.py       # Application entry point
-│   │   └── ...
-│   ├── static/               # Built frontend files
-│   ├── scaie.db              # SQLite database
-│   └── requirements.txt      # Python dependencies
+│   │   │   ├── api/          # Endpoints de la API
+│   │   │   ├── core/         # Configuración del núcleo
+│   │   │   ├── models/       # Modelos de datos
+│   │   │   ├── schemas/      # Esquemas de Pydantic
+│   │   │   ├── services/     # Servicios de negocio
+│   │   │   └── main.py       # Punto de entrada de la aplicación
+│   │   └── static/           # Archivos estáticos (frontend compilado)
+│   └── requirements.txt      # Dependencias de Python
 ├── frontend/
 │   ├── src/
-│   │   ├── components/       # Vue components
-│   │   ├── pages/            # Page components
-│   │   ├── services/         # API service layer
-│   │   └── ...
-│   └── package.json          # Node.js dependencies
-├── scripts/                  # Utility scripts
-├── run_complete.sh           # Complete system run script
-└── ...
+│   │   ├── assets/           # Recursos estáticos
+│   │   ├── components/       # Componentes de Vue
+│   │   ├── layouts/          # Diseños de página
+│   │   ├── pages/            # Páginas de la aplicación
+│   │   ├── router/           # Configuración de rutas
+│   │   ├── services/         # Servicios de API
+│   │   ├── stores/           # Stores de Pinia
+│   │   └── utils/            # Utilidades
+│   └── package.json          # Dependencias de Node.js
+├── docs/                     # Documentación
+├── scripts/                  # Scripts de utilidad
+├── setup.sh                  # Script de configuración
+├── run_app.sh                # Script de ejecución
+└── run_complete.sh           # Script de ejecución completa
 ```
 
-## 🛠️ Development
+## Agentes y Funcionalidades
 
-### Backend Development
+### Agente Especializado en Ventas del Workshop
 
-The backend is built with FastAPI and uses:
-- SQLAlchemy for database operations
-- SQLite as the default database
-- Pydantic for data validation
-- OAuth2 for authentication
+El agente está entrenado específicamente para:
+1. **Descubrir Necesidades**: Hacer preguntas abiertas para entender los desafíos del cliente
+2. **Posicionar Valor**: Conectar los problemas del cliente con soluciones de IA
+3. **Manejar Objeciones**: Responder con empatía a preocupaciones comunes
+4. **Cerrar Ventas**: Guiar al cliente hacia agendar una sesión o solicitar información
 
-### Frontend Development
+### Integraciones
 
-The frontend is built with Vue.js 3 and uses:
-- Vue Router for navigation
-- Tailwind CSS for styling
-- Fetch API for backend communication
+- WhatsApp Business API
+- Facebook Messenger
+- Telegram Bot
+- Web Chat
 
-To run the frontend in development mode:
-```bash
-cd frontend
-npm run dev
-```
+## Desarrollo
+
+### Estructura del Backend
+
+El backend está construido con FastAPI y sigue una arquitectura limpia:
+- **API Endpoints**: Rutas REST bien definidas
+- **Modelos**: SQLAlchemy ORM para interacción con la base de datos
+- **Servicios**: Lógica de negocio encapsulada
+- **Esquemas**: Validación de datos con Pydantic
+
+### Estructura del Frontend
+
+El frontend utiliza Vue 3 con Composition API:
+- **Componentes Reutilizables**: Diseño modular
+- **Estado Global**: Gestión con Pinia
+- **Enrutamiento**: Vue Router para navegación
+- **Estilos**: TailwindCSS para diseño responsivo
 
 ## 🔧 Configuration
 
@@ -224,13 +263,13 @@ The agent can be configured with:
 - `AGENT_TONE`: Communication tone
 - `AGENT_GOAL`: Primary goal of the agent
 
-## 📚 API Documentation
+## Contribución
 
-The complete API documentation is available at http://localhost:8003/docs when the application is running. It includes:
-- All endpoints with examples
-- Request/response schemas
-- Authentication requirements
-- Error codes
+1. Haz un fork del repositorio
+2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
+3. Realiza tus cambios (`git commit -m 'Add some AmazingFeature'`)
+4. Haz push a la rama (`git push origin feature/AmazingFeature`)
+5. Abre un Pull Request
 
 ## 🤝 Contributing
 
@@ -240,9 +279,19 @@ The complete API documentation is available at http://localhost:8003/docs when t
 4. Push to the branch
 5. Create a Pull Request
 
-## 📄 License
+## Licencia
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Este proyecto está licenciado bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para más detalles.
+
+## Contacto
+
+Para más información, visita [www.scaie.com.mx](https://www.scaie.com.mx) o contacta con el equipo de desarrollo.
+
+## Estado del Proyecto
+
+Versión actual: v1.0.0 - Producción
+
+El sistema está listo para ser usado en entornos de producción con todas las funcionalidades implementadas y probadas.
 
 ## 📞 Support
 

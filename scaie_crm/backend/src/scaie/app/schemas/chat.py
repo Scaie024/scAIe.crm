@@ -11,6 +11,7 @@ class ContactInfo(BaseModel):
     phone: Optional[str] = None
     name: Optional[str] = None
     company: Optional[str] = None
+    email: Optional[str] = None
 
 class ChatRequest(BaseModel):
     model_config = ConfigDict(from_attributes=True)
@@ -29,11 +30,10 @@ class SandboxRequest(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     
     message: str
-    agent_prompt: Optional[str] = None
-    history: Optional[List[Message]] = []
+    reset_context: Optional[bool] = False
 
 class SandboxResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     
     response: str
-    usage: Optional[Dict[str, Any]] = None
+    metadata: Optional[Dict[str, Any]] = None
