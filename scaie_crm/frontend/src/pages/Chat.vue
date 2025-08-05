@@ -118,6 +118,20 @@
                 </div>
               </div>
             </div>
+            
+            <div v-if="errorMessage" class="mb-4 text-left">
+              <div class="inline-block px-4 py-2 rounded-2xl bg-danger-100 border border-danger-200 rounded-tl-none">
+                <div class="flex items-center">
+                  <div class="w-6 h-6 rounded-full bg-danger-200 flex items-center justify-center text-danger-800 mr-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                  </div>
+                  <span class="text-xs font-medium text-danger-700">Error</span>
+                </div>
+                <div class="text-sm text-danger-700 whitespace-pre-wrap">{{ errorMessage }}</div>
+              </div>
+            </div>
           </div>
           
           <!-- Área de entrada -->
@@ -152,166 +166,116 @@
 </template>
 
 <script>
-import { ref, watch, onMounted, nextTick } from 'vue'
+import { ref, onMounted, nextTick } from 'vue';
+import { chatService } from '../services/api';
 
 export default {
-  name: 'ChatTest',
+  name: 'Chat',
   setup() {
-    const chatContainer = ref(null)
-    const messages = ref([])
-    const newMessage = ref('')
-    const loading = ref(false)
-    const sending = ref(false)
+    const newMessage = ref('');
+    const messages = ref([]);
+    const isTyping = ref(false);
+    const chatContainer = ref(null);
+    const errorMessage = ref('');
     
     const customerInfo = ref({
-      name: 'Cliente de Prueba',
-      phone: '+525512345678',
-      company: 'Empresa de Prueba'
-    })
+      name: '',
+      company: '',
+      email: '',
+      phone: ''
+    });
     
-    // Scroll to bottom of chat
     const scrollToBottom = () => {
       nextTick(() => {
         if (chatContainer.value) {
-          chatContainer.value.scrollTop = chatContainer.value.scrollHeight
+          chatContainer.value.scrollTop = chatContainer.value.scrollHeight;
         }
-      })
-    }
+      });
+    };
     
-    // Format time for messages
-    const formatTime = (dateString) => {
-      if (!dateString) return ''
-      const date = new Date(dateString)
-      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    }
+    const formatTime = (timestamp) => {
+      return new Date(timestamp).toLocaleTimeString('es-ES', {
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    };
     
-    // Send message to backend
+    const addMessage = (text, sender) => {
+      const message = {
+        id: Date.now(),
+        text: text,
+        sender: sender,
+        timestamp: new Date()
+      };
+      messages.value.push(message);
+      scrollToBottom();
+    };
+    
     const sendMessage = async () => {
-      if (!newMessage.value.trim() || loading.value) return
+      const message = newMessage.value.trim();
+      if (!message || isTyping.value) return;
       
-      // Add user message to chat
-      const userMessage = {
-        sender: 'user',
-        content: newMessage.value,
-        created_at: new Date().toISOString()
-      }
+      // Clear error message
+      errorMessage.value = '';
       
-      messages.value.push(userMessage)
-      const messageToSend = newMessage.value
-      newMessage.value = ''
-      sending.value = true
+      // Add user message
+      addMessage(message, 'user');
+      newMessage.value = '';
+      isTyping.value = true;
       
       try {
-        // Send message to backend using the omnipotent agent
-        const response = await fetch('/api/omnipotent-agent/process-message', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            message: messageToSend,
-            platform: "web",
-            contact_info: {
-              name: customerInfo.value.name,
-              phone: customerInfo.value.phone,
-              company: customerInfo.value.company
-            }
-          })
-        })
+        // Send message to backend
+        const response = await chatService.sendMessage(message, customerInfo.value);
         
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}))
-          throw new Error(errorData.detail || `HTTP error! status: ${response.status}`)
+        // Add AI response
+        isTyping.value = false;
+        if (response && response.response) {
+          addMessage(response.response, 'ai');
+        } else {
+          errorMessage.value = 'No se recibió una respuesta válida del servidor.';
         }
-        
-        const data = await response.json()
-        
-        // Add agent response to chat
-        const agentMessage = {
-          sender: 'agent',
-          content: data.response,
-          created_at: new Date().toISOString()
-        }
-        
-        messages.value.push(agentMessage)
       } catch (error) {
-        console.error('Error sending message:', error)
-        
-        // Show error message
-        const errorMessage = {
-          sender: 'agent',
-          content: 'Lo siento, ocurrió un error al procesar tu mensaje. Por favor, inténtalo de nuevo.',
-          created_at: new Date().toISOString()
-        }
-        
-        messages.value.push(errorMessage)
-      } finally {
-        sending.value = false
+        isTyping.value = false;
+        console.error('Error sending message:', error);
+        errorMessage.value = `Error al enviar el mensaje: ${error.message || 'Error desconocido'}`;
+        addMessage('Lo siento, estoy teniendo problemas para responder en este momento. Por favor, inténtalo de nuevo.', 'ai');
       }
-    }
+    };
     
-    // Reset conversation
     const resetConversation = () => {
-      messages.value = []
-      
-      // Add welcome message
-      setTimeout(() => {
-        const welcomeMessage = {
-          sender: 'agent',
-          content: '¡Hola! Soy SCAI, tu asistente virtual especializado en ventas automatizadas de scaie.com.mx. ¿En qué puedo ayudarte hoy?',
-          created_at: new Date().toISOString()
-        }
-        messages.value.push(welcomeMessage)
-      }, 500)
-    }
+      messages.value = [];
+      errorMessage.value = '';
+      addMessage('¡Hola! Soy tu asistente virtual de SCAIE. ¿En qué puedo ayudarte hoy?', 'ai');
+    };
     
-    // Initialize with welcome message
     onMounted(() => {
       // Add welcome message
-      setTimeout(() => {
-        const welcomeMessage = {
-          sender: 'agent',
-          content: '¡Hola! Soy SCAI, tu asistente virtual especializado en ventas automatizadas de scaie.com.mx. ¿En qué puedo ayudarte hoy?',
-          created_at: new Date().toISOString()
-        }
-        messages.value.push(welcomeMessage)
-      }, 500)
-    })
-    
-    // Watch for new messages and scroll to bottom
-    watch(() => messages.value, () => {
-      scrollToBottom()
-    }, { deep: true })
-    
-    // Scroll to bottom when loading changes
-    watch(() => loading.value, () => {
-      scrollToBottom()
-    })
+      addMessage('¡Hola! Soy tu asistente virtual de SCAIE. ¿En qué puedo ayudarte hoy?', 'ai');
+    });
     
     return {
-      chatContainer,
-      messages,
       newMessage,
-      loading,
-      sending,
+      messages,
+      isTyping,
+      chatContainer,
       customerInfo,
-      formatTime,
+      errorMessage,
       sendMessage,
       resetConversation,
-      scrollToBottom
-    }
+      formatTime
+    };
   }
-}
-
-// Necesitamos importar watch desde vue
+};
 </script>
 
 <style scoped>
-.chat-test {
-  height: calc(100vh - 200px);
+/* Animaciones personalizadas */
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
 }
 
-.overflow-y-auto {
-  scroll-behavior: smooth;
+.animate-bounce {
+  animation: bounce 1s infinite;
 }
 </style>

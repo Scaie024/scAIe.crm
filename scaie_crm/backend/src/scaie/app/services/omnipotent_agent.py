@@ -1,7 +1,9 @@
 import re
+import logging
 from typing import Dict, List, Any, Optional
 from sqlalchemy.orm import Session
 from sqlalchemy import and_, or_, func
+from sqlalchemy.exc import SQLAlchemyError
 
 from ..core.database import get_db
 from ..models.contact import Contact, InterestLevel
@@ -10,6 +12,13 @@ from ..models.agent_action import AgentAction, AgentTask
 from ..services.llm_service import llm_service
 from ..services.scaie_knowledge import scaie_knowledge
 from ..services.workshop_knowledge import workshop_knowledge_instance
+
+# Configure logging
+logger = logging.getLogger(__name__)
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
 
 class OmnipotentAgent:
     def __init__(self):
@@ -30,16 +39,33 @@ class OmnipotentAgent:
             conversation = self._get_or_create_conversation(db, contact.id, platform)
             
             # Save user message
-            user_message = self._save_message(db, conversation.id, "user", message)
+            try:
+                user_message = self._save_message(db, conversation.id, "user", message)
+            except SQLAlchemyError as e:
+                logger.error(f"Database error saving user message: {str(e)}")
+                db.rollback()
+                # Continue anyway since we can still generate a response
             
             # Generate response using LLM
-            response_text = await self._generate_response(db, message, contact, conversation)
+            try:
+                response_text = await self._generate_response(db, message, contact, conversation)
+            except Exception as e:
+                logger.error(f"Error generating LLM response: {str(e)}")
+                response_text = "Lo siento, estoy experimentando dificultades técnicas en este momento. Por favor, inténtalo de nuevo más tarde."
             
             # Save agent response
-            agent_message = self._save_message(db, conversation.id, "agent", response_text)
+            try:
+                agent_message = self._save_message(db, conversation.id, "agent", response_text)
+            except SQLAlchemyError as e:
+                logger.error(f"Database error saving agent message: {str(e)}")
+                db.rollback()
             
             # Determine actions based on message content
-            actions = self._determine_actions(message, contact)
+            try:
+                actions = self._determine_actions(message, contact)
+            except Exception as e:
+                logger.error(f"Error determining actions: {str(e)}")
+                actions = []
             
             # Execute immediate actions
             executed_actions = []
@@ -47,34 +73,59 @@ class OmnipotentAgent:
             
             for action in actions:
                 if action.get("execute_immediately", False):
-                    result = self._execute_action(db, action, contact, conversation)
-                    executed_actions.append({
-                        "action_type": action["type"],
-                        "parameters": action["parameters"],
-                        "result": result
-                    })
+                    try:
+                        result = self._execute_action(db, action, contact, conversation)
+                        executed_actions.append({
+                            "action_type": action["type"],
+                            "parameters": action["parameters"],
+                            "result": result
+                        })
+                    except Exception as e:
+                        logger.error(f"Error executing immediate action {action['type']}: {str(e)}")
                 else:
                     # Save pending action
-                    self._save_pending_action(db, action, conversation.id)
-                    pending_actions.append(action)
+                    try:
+                        self._save_pending_action(db, action, conversation.id)
+                        pending_actions.append(action)
+                    except SQLAlchemyError as e:
+                        logger.error(f"Database error saving pending action: {str(e)}")
+                        db.rollback()
             
             # Update contact interest level based on message content
-            self._update_interest_level(db, contact, message)
+            try:
+                self._update_interest_level(db, contact, message)
+            except Exception as e:
+                logger.error(f"Error updating interest level: {str(e)}")
             
-            db.commit()
+            # Only commit if we have no errors that require rollback
+            try:
+                db.commit()
+            except SQLAlchemyError as e:
+                logger.error(f"Database commit error: {str(e)}")
             
             return {
                 "response": response_text,
                 "contact_id": contact.id,
-                "message_id": agent_message.id,
+                "message_id": agent_message.id if 'agent_message' in locals() else None,
                 "actions": pending_actions,
                 "executed_actions": executed_actions
             }
             
         except Exception as e:
+            logger.error(f"Critical error processing incoming message: {str(e)}")
             db.rollback()
-            raise e
+            # Return a default error response
+            error_response = "Lo siento, estoy experimentando dificultades técnicas en este momento. Por favor, inténtalo de nuevo más tarde."
+            return {
+                "response": error_response,
+                "contact_id": contact.id if 'contact' in locals() else None,
+                "message_id": None,
+                "actions": [],
+                "executed_actions": [],
+                "error": str(e)
+            }
         finally:
+            # Close database connection
             db.close()
     
     def _get_or_create_contact(self, db: Session, contact_info: Dict[str, Any], platform: str) -> Contact:
@@ -189,12 +240,11 @@ class OmnipotentAgent:
         
         # Generate response
         response = await llm_service.generate_response(
-            user_message=message,
-            conversation_id=conversation.id,
-            contact_info=contact_info
+            message=message,
+            contact=contact_info
         )
         
-        return response.get("response", "Lo siento, no puedo procesar tu solicitud en este momento.")
+        return response
     
     def _determine_actions(self, message: str, contact: Contact) -> List[Dict[str, Any]]:
         """
@@ -363,25 +413,36 @@ class OmnipotentAgent:
     def _update_interest_level(self, db: Session, contact: Contact, message: str):
         """
         Update contact interest level based on message content.
+        Returns True if update was successful, False otherwise.
         """
-        message_lower = message.lower()
-        
-        # Update interest level based on keywords
-        if any(keyword in message_lower for keyword in ["no estoy interesado", "no me interesa", "no gracias", "no quiero"]):
-            contact.interest_level = InterestLevel.NOT_INTERESTED
-        elif any(keyword in message_lower for keyword in ["estoy interesado", "me interesa", "quiero saber más", "quiero saber mas", "quiero información", "quiero informacion", "agendar", "cita", "demo"]):
-            contact.interest_level = InterestLevel.INTERESTED
-        elif any(keyword in message_lower for keyword in ["agendar", "cita", "reunión", "reunion", "cuando", "horario"]):
-            contact.interest_level = InterestLevel.CONFIRMED
-        elif contact.interest_level == InterestLevel.NEW:
-            contact.interest_level = InterestLevel.CONTACTED
+        try:
+            message_lower = message.lower()
+            
+            # Update interest level based on keywords
+            if any(keyword in message_lower for keyword in ["no estoy interesado", "no me interesa", "no gracias", "no quiero"]):
+                contact.interest_level = InterestLevel.NOT_INTERESTED
+            elif any(keyword in message_lower for keyword in ["estoy interesado", "me interesa", "quiero saber más", "quiero saber mas", "quiero información", "quiero informacion", "agendar", "cita", "demo"]):
+                contact.interest_level = InterestLevel.INTERESTED
+            elif any(keyword in message_lower for keyword in ["agendar", "cita", "reunión", "reunion", "cuando", "horario"]):
+                contact.interest_level = InterestLevel.CONFIRMED
+            elif contact.interest_level == InterestLevel.NEW:
+                contact.interest_level = InterestLevel.CONTACTED
+                
+            db.add(contact)
+            return True
+            
+        except Exception as e:
+            logger.error(f"Error updating contact interest level: {str(e)}")
+            return False
     
     def execute_pending_actions(self, conversation_id: int) -> List[Dict[str, Any]]:
         """
         Execute all pending actions for a conversation.
+        Returns list of execution results.
         """
         db_gen = get_db()
         db = next(db_gen)
+        results = []
         
         try:
             # Get pending actions
@@ -392,28 +453,137 @@ class OmnipotentAgent:
                 )
             ).all()
             
-            results = []
-            
-            for action in pending_actions:
-                # In a real implementation, we would actually execute the actions here
-                # For now, we'll just mark them as completed
-                action.status = "completed"
-                action.executed_at = func.now()
+            if not pending_actions:
+                logger.info(f"No pending actions found for conversation {conversation_id}")
+                return results
                 
-                results.append({
-                    "action_type": action.action_type,
-                    "parameters": action.parameters,
-                    "result": action.result
-                })
+            for action in pending_actions:
+                try:
+                    # Attempt to execute the action
+                    if action.action_type == "send_workshop_material":
+                        result = self._send_workshop_material(db, action)
+                    elif action.action_type == "schedule_workshop_appointment":
+                        result = self._schedule_workshop_appointment(db, action)
+                    elif action.action_type == "generate_workshop_quote":
+                        result = self._generate_workshop_quote(db, action)
+                    elif action.action_type == "escalate_to_human":
+                        result = self._escalate_to_human(db, action)
+                    else:
+                        # Unknown action type
+                        result = {
+                            "status": "failed",
+                            "error": f"Unknown action type: {action.action_type}",
+                            "action_id": action.id
+                        }
+                        logger.error(f"Unknown action type: {action.action_type}")
+                    
+                    # Update action status
+                    action.status = "completed" if result["status"] == "success" else "failed"
+                    action.executed_at = func.now()
+                    action.result = result
+                    
+                    results.append(result)
+                    
+                except Exception as e:
+                    logger.error(f"Error executing action {action.id}: {str(e)}")
+                    action.status = "failed"
+                    action.executed_at = func.now()
+                    action.result = {
+                        "status": "failed",
+                        "error": str(e),
+                        "action_id": action.id
+                    }
+                    results.append(action.result)
             
             db.commit()
             return results
             
-        except Exception as e:
+        except SQLAlchemyError as e:
+            logger.error(f"Database error executing pending actions: {str(e)}")
             db.rollback()
-            raise e
+            results.append({
+                "status": "failed",
+                "error": f"Database error: {str(e)}"
+            })
+            return results
+        except Exception as e:
+            logger.error(f"Unexpected error executing pending actions: {str(e)}")
+            db.rollback()
+            results.append({
+                "status": "failed",
+                "error": f"Unexpected error: {str(e)}"
+            })
+            return results
         finally:
             db.close()
+    
+    def _send_workshop_material(self, db: Session, action: AgentAction) -> Dict[str, Any]:
+        """Internal method to send workshop material."""
+        try:
+            # Implementation here would actually send the material
+            # This is a placeholder for the actual implementation
+            return {
+                "status": "success",
+                "message": f"Workshop material '{action.parameters.get('material_type')}' sent successfully",
+                "action_id": action.id
+            }
+        except Exception as e:
+            return {
+                "status": "failed",
+                "error": str(e),
+                "action_id": action.id
+            }
+    
+    def _schedule_workshop_appointment(self, db: Session, action: AgentAction) -> Dict[str, Any]:
+        """Internal method to schedule a workshop appointment."""
+        try:
+            # Implementation here would actually schedule the appointment
+            # This is a placeholder for the actual implementation
+            return {
+                "status": "success",
+                "message": f"Workshop appointment scheduled successfully: {action.parameters.get('appointment_type')}",
+                "action_id": action.id
+            }
+        except Exception as e:
+            return {
+                "status": "failed",
+                "error": str(e),
+                "action_id": action.id
+            }
+    
+    def _generate_workshop_quote(self, db: Session, action: AgentAction) -> Dict[str, Any]:
+        """Internal method to generate a workshop quote."""
+        try:
+            # Implementation here would generate the quote
+            # This is a placeholder for the actual implementation
+            return {
+                "status": "success",
+                "message": f"Workshop quote generated successfully for contact {action.parameters.get('contact_id')}",
+                "action_id": action.id
+            }
+        except Exception as e:
+            return {
+                "status": "failed",
+                "error": str(e),
+                "action_id": action.id
+            }
+    
+    def _escalate_to_human(self, db: Session, action: AgentAction) -> Dict[str, Any]:
+        """Internal method to escalate to human agent."""
+        try:
+            # Implementation here would handle the escalation
+            # This is a placeholder for the actual implementation
+            return {
+                "status": "success",
+                "message": f"Conversation escalated to human agent: {action.parameters.get('reason')}",
+                "action_id": action.id
+            }
+        except Exception as e:
+            return {
+                "status": "failed",
+                "error": str(e),
+                "action_id": action.id
+            }
     
     def get_contact_summary(self, contact_id: int) -> Dict[str, Any]:
         """

@@ -1,18 +1,18 @@
 import os
 import asyncio
+import logging
 from typing import Dict, List, Optional, Any
 from dotenv import load_dotenv
 import json
 import random
 from datetime import datetime
-import logging
 from .scaie_knowledge import scaie_knowledge
 from .workshop_knowledge import workshop_knowledge_instance
 from ..core.database import get_db, SessionLocal
 from ..models.conversation import Message, Conversation
 from ..models.contact import Contact, InterestLevel
 from ..services.contact_service import contact_service
-from openai import AsyncOpenAI, OpenAI
+from openai import AsyncOpenAI, OpenAI, APIError, RateLimitError
 
 # Configurar logging
 logging.basicConfig(level=logging.INFO)
@@ -27,319 +27,102 @@ AGENT_PERSONALITY = os.getenv('AGENT_PERSONALITY', 'experto en ventas de worksho
 AGENT_TONE = os.getenv('AGENT_TONE', 'profesional y directo')
 AGENT_GOAL = os.getenv('AGENT_GOAL', 'vender el workshop "Sé más eficiente con IA" y posicionar a SCAIE como consultor experto en IA')
 
+# Initialize OpenAI client
+DASHSCOPE_API_KEY = os.getenv("DASHSCOPE_API_KEY")
+api_key = DASHSCOPE_API_KEY
+base_url = "https://dashscope-intl.aliyuncs.com/compatible-mode/v1"
+
+if api_key:
+    client = AsyncOpenAI(
+        api_key=api_key,
+        base_url=base_url
+    )
+else:
+    logger.warning("DASHSCOPE_API_KEY not found in environment variables")
+    client = None
+
 def format_response(text):
     """Da formato a la respuesta para que parezca más natural"""
-    # Asegurar que la primera letra sea mayúscula
-    if text and len(text) > 0:
-        text = text[0].upper() + text[1:]
+    # Eliminar espacios extra al inicio y final
+    text = text.strip()
     
-    # Asegurar que termine con un punto
-    if text and text[-1] not in ['.', '!', '?']:
-        text += '.'
+    # Eliminar asteriscos que pueden haberse generado en la respuesta
+    text = text.replace('*', '')
+    
+    # Eliminar comillas iniciales y finales si existen
+    if text.startswith('"') and text.endswith('"'):
+        text = text[1:-1]
     
     return text
 
-class LLMService:
-    def __init__(self):
-        """Inicializa el servicio de LLM."""
-        self.api_key = os.getenv("DASHSCOPE_API_KEY")
-        self.model = os.getenv("DASHSCOPE_MODEL", "qwen-plus")
-        self.client = None
-        self.sync_client = None
-        
-        if self.api_key:
-            self.client = AsyncOpenAI(
-                api_key=self.api_key,
-                base_url="https://dashscope-intl.aliyuncs.com/compatible-mode/v1"
-            )
-            self.sync_client = OpenAI(
-                api_key=self.api_key,
-                base_url="https://dashscope-intl.aliyuncs.com/compatible-mode/v1"
-            )
-        
-        self._initialize_system_prompt()
+async def generate_response(message: str, contact: Optional[Dict[str, Any]] = None) -> str:
+    """
+    Genera una respuesta usando el modelo de lenguaje.
     
-    def _initialize_system_prompt(self):
-        """Inicializa el prompt del sistema para el agente de ventas con personalidad."""
-        current_date = datetime.now().strftime("%Y-%m-%d %H:%M")
+    Args:
+        message: Mensaje del usuario
+        contact: Información del contacto (opcional)
         
-        # Get workshop overview
-        workshop_overview = workshop_knowledge_instance.get_workshop_overview()
-        
-        self.system_prompt = f"""
-Eres {AGENT_NAME}, un consultor experto en inteligencia artificial de SCAIE (www.scaie.com.mx).
+    Returns:
+        Respuesta generada por el modelo
+    """
+    if not client:
+        logger.error("OpenAI client not initialized - missing API key")
+        return "Lo siento, no puedo procesar tu solicitud en este momento debido a problemas de configuración."
+    
+    try:
+        # Construir el contexto de la conversación
+        context = f"""
+Eres {AGENT_NAME}, un {AGENT_PERSONALITY}.
+Tu objetivo es: {AGENT_GOAL}.
+Tono de comunicación: {AGENT_TONE}.
 
-TU MISIÓN:
-Vender el workshop "Sé más eficiente con IA" que ayuda a empresas a mejorar su productividad usando herramientas de IA sin código.
+Información del contacto:
+Nombre: {contact.get('name', 'No proporcionado') if contact else 'No proporcionado'}
+Empresa: {contact.get('company', 'No proporcionada') if contact else 'No proporcionada'}
+Nivel de interés: {contact.get('interest_level', 'No determinado') if contact else 'No determinado'}
 
-VALOR QUE OFRECES:
-- Empodera a tu equipo con IA sin necesidad de programar
-- Elimina la brecha entre perfiles jr y sr
-- Mejora procesos en todos los departamentos
-- Herramientas freemium y low-code
-- Análisis de datos sin complicaciones
-
-TÉCNICAS DE VENTA:
-1. Escucha activa, identifica necesidades
-2. Conecta problemas con soluciones de IA
-3. Ofrece valor antes de pedir algo
-4. Usa testimonios relevantes
-5. Maneja objeciones con empatía
-6. Cierra con propuestas concretas
-
-ESTILO DE COMUNICACIÓN:
-- Respuestas cortas (1-2 oraciones máximo)
-- Lenguaje natural, humano
-- Sin emojis
-- Directo y profesional
-- Enfocado en resolver
-
-FECHA Y HORA ACTUAL: {current_date}
-
-INSTRUCCIONES PARA RESPONDER:
-1. Sé directo y conciso
-2. No uses emojis
-3. Habla como un consultor real
-4. Escucha y detecta necesidades
-5. Adapta tu enfoque al cliente
-6. Avanza hacia agendar o enviar materiales
-7. Si no puedes responder, escala a humano
+Mensaje del cliente: {message}
 """
-        
-        self.conversation_history = [{
-            'role': 'system',
-            'content': self.system_prompt
-        }]
-    
-    async def generate_response(self, user_message: str, conversation_id: Optional[int] = None, 
-                              contact_info: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
-        """
-        Genera una respuesta a partir del mensaje del usuario usando Qwen.
-        
-        Args:
-            user_message: Mensaje del usuario
-            conversation_id: ID de la conversación (opcional)
-            contact_info: Información del contacto (opcional)
-            
-        Returns:
-            Dict con la respuesta generada y metadatos
-        """
-        logger.info(f"Generando respuesta para el mensaje: {user_message}")
-        
-        # Si no hay clave API, devolver un mensaje indicando que se necesita configurar
-        if not self.api_key:
-            logger.warning("No hay clave API, mostrando mensaje de configuración")
-            response_text = "Para utilizar el agente de inteligencia artificial, necesitas configurar una clave API válida de DashScope. Por favor, visita https://dashscope.console.aliyuncs.com/ para obtener una clave y configúrala en el archivo .env."
-            
-            # Agregar respuesta al historial
-            self.conversation_history.append({
-                'role': 'user',
-                'content': user_message
-            })
-            self.conversation_history.append({
-                'role': 'assistant',
-                'content': response_text
-            })
-            
-            return {
-                'success': True,
-                'response': response_text,
-                'metadata': {
-                    'model': 'no-api-key',
-                    'tokens_used': 0,
-                    'context_used': []
-                }
-            }
-        
-        try:
-            # Añadir el mensaje del usuario al historial
-            self.conversation_history.append({
-                'role': 'user',
-                'content': user_message
-            })
-            
-            # Generar respuesta usando el modelo
-            response = await self.client.chat.completions.create(
-                model=self.model,
-                messages=self.conversation_history,
-                temperature=float(os.getenv('MODEL_TEMPERATURE', 0.7)),
-                max_tokens=int(os.getenv('MODEL_MAX_TOKENS', 150))  # Reducido aún más para respuestas más concisas
-            )
-            
-            # Extraer la respuesta del modelo
-            response_text = response.choices[0].message.content
-            tokens_used = response.usage.total_tokens if response.usage else 0
-            
-            logger.info(f"Respuesta del modelo: {response_text}")
-            
-            # Formatear la respuesta para que parezca más natural
-            formatted_response = format_response(response_text)
-            
-            # Añadir la respuesta al historial
-            self.conversation_history.append({
-                'role': 'assistant',
-                'content': formatted_response
-            })
-            
-            # Limitar el historial a las últimas 10 interacciones para evitar context overflow
-            if len(self.conversation_history) > 10:
-                # Mantener el mensaje del sistema y las últimas 9 interacciones
-                self.conversation_history = [self.conversation_history[0]] + self.conversation_history[-9:]
-            
-            return {
-                'success': True,
-                'response': formatted_response,
-                'metadata': {
-                    'model': self.model,
-                    'tokens_used': tokens_used,
-                    'context_used': [msg['content'] for msg in self.conversation_history]
-                }
-            }
-            
-        except Exception as e:
-            logger.error(f"Error al generar respuesta: {e}")
-            return {
-                'success': False,
-                'response': "Lo siento, estoy teniendo dificultades técnicas en este momento. ¿Podrías intentar de nuevo más tarde?",
-                'error': str(e)
-            }
-    
-    def reset_conversation(self):
-        """Reinicia la conversación."""
-        self._initialize_system_prompt()
-        return {'success': True, 'message': 'Conversación reiniciada'}
 
-    def process_chat_message(self, message: str, phone: str, name: Optional[str] = None, db=None):
-        """
-        Process a chat message and return the response.
-        """
-        # If no database session provided, create one
-        if db is None:
-            db = SessionLocal()
-            
-        try:
-            # Get or create contact
-            contact = db.query(Contact).filter(Contact.phone == phone).first()
-            if not contact:
-                contact = Contact(
-                    name=name or "Cliente",
-                    phone=phone,
-                    interest_level=InterestLevel.NEW
-                )
-                db.add(contact)
-                db.commit()
-                db.refresh(contact)
-            
-            # Create or get conversation
-            conversation = db.query(Conversation).filter(Conversation.contact_id == contact.id).first()
-            if not conversation:
-                conversation = Conversation(contact_id=contact.id)
-                db.add(conversation)
-                db.commit()
-                db.refresh(conversation)
-            
-            # Add user message to conversation
-            user_message = Message(
-                conversation_id=conversation.id,
-                contact_id=contact.id,
-                sender="user",
-                content=message
-            )
-            db.add(user_message)
-            db.commit()
-            
-            # Get conversation history
-            messages = db.query(Message).filter(
-                Message.conversation_id == conversation.id
-            ).order_by(Message.created_at).all()
-            
-            # Convert to the format expected by the LLM
-            formatted_messages = [
-                {"role": "system", "content": self.system_prompt}
-            ]
-            
-            # Add conversation history (limit to last 10 messages to prevent context overflow)
-            for msg in messages[-10:]:
-                formatted_messages.append({
-                    "role": "user" if msg.sender == "user" else "assistant",
-                    "content": msg.content
-                })
-            
-            # Get response from LLM using the real API
-            try:
-                # Use actual LLM API for generating response
-                response = self._get_llm_response(formatted_messages)
-                
-                # Save assistant response to database
-                assistant_message = Message(
-                    conversation_id=conversation.id,
-                    contact_id=contact.id,
-                    sender="agent",
-                    content=response
-                )
-                db.add(assistant_message)
-                db.commit()
-                
-                return {
-                    "response": response,
-                    "contact_id": contact.id,
-                    "message_id": assistant_message.id
+        # Generar la respuesta usando el modelo
+        logger.info(f"Generando respuesta para el mensaje: {message}")
+        
+        completion = await client.chat.completions.create(
+            model="qwen-plus",
+            messages=[
+                {
+                    "role": "system",
+                    "content": context
+                },
+                {
+                    "role": "user",
+                    "content": message
                 }
-            except Exception as e:
-                logger.error(f"Error al obtener respuesta de LLM: {e}")
-                # Fallback response
-                response = "Gracias por tu mensaje. Estoy aquí para ayudarte con cualquier pregunta sobre nuestros servicios."
-                
-                # Save assistant response to database
-                assistant_message = Message(
-                    conversation_id=conversation.id,
-                    contact_id=contact.id,
-                    sender="agent",
-                    content=response
-                )
-                db.add(assistant_message)
-                db.commit()
-                
-                return {
-                    "response": response,
-                    "contact_id": contact.id,
-                    "message_id": assistant_message.id
-                }
-                
-        except Exception as e:
-            db.rollback()
-            logger.error(f"Error al procesar mensaje de chat: {e}")
-            raise e
-        finally:
-            if db is SessionLocal():
-                db.close()
-    
-    def _get_llm_response(self, messages: List[Dict[str, str]]) -> str:
-        """
-        Get response from LLM using the real API.
-        This is a synchronous version for use in non-async contexts.
-        """
-        try:
-            # Get response from LLM
-            response = self.sync_client.chat.completions.create(
-                model=self.model,
-                messages=messages,
-                temperature=float(os.getenv('MODEL_TEMPERATURE', 0.7)),
-                max_tokens=int(os.getenv('MODEL_MAX_TOKENS', 256))  # Reducido para respuestas más concisas
-            )
-            
-            # Extract response text
-            response_text = response.choices[0].message.content
-            
-            # Format response to make it more natural
-            formatted_response = format_response(response_text)
-            
-            return formatted_response
-            
-        except Exception as e:
-            logger.error(f"Error al obtener respuesta de LLM: {e}")
-            # Return a fallback response
-            return "Gracias por tu mensaje. ¿Podrías proporcionar más detalles sobre tu consulta para poder ayudarte mejor?"
+            ],
+            temperature=0.7,
+            top_p=0.8
+        )
+        
+        response_text = completion.choices[0].message.content
+        formatted_response = format_response(response_text)
+        
+        logger.info(f"Respuesta del modelo: {formatted_response}")
+        return formatted_response
+        
+    except RateLimitError as e:
+        logger.error(f"Rate limit exceeded: {str(e)}")
+        return "Estoy recibiendo muchas solicitudes en este momento. Por favor, espera un momento antes de enviar otro mensaje."
+        
+    except APIError as e:
+        logger.error(f"API error: {str(e)}")
+        return "Lo siento, estoy teniendo dificultades para conectarme con mis sistemas en este momento. Por favor, inténtalo de nuevo más tarde."
+        
+    except Exception as e:
+        logger.error(f"Error generando respuesta: {str(e)}")
+        return "Lo siento, estoy experimentando dificultades técnicas en este momento. Por favor, inténtalo de nuevo más tarde."
 
-# Instancia global del servicio
-llm_service = LLMService()
+# Instancia del servicio
+llm_service = type('LLMService', (), {
+    'generate_response': staticmethod(generate_response)
+})()

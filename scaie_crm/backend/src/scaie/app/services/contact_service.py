@@ -1,11 +1,16 @@
 import csv
 import json
+import logging
 from datetime import datetime
 from typing import List, Optional, Dict, Any, Union
 from sqlalchemy.orm import Session
 from sqlalchemy import or_, func, desc
 from ..models.contact import Contact, InterestLevel
 from ..schemas.contact import ContactCreate, ContactUpdate
+
+# Configurar logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 class ContactService:
     def get_contacts(
@@ -27,28 +32,32 @@ class ContactService:
         Returns:
             Dict with contacts and pagination info
         """
-        query = db.query(Contact)
-        
-        if search:
-            search_filter = f"%{search}%"
-            query = query.filter(
-                or_(
-                    Contact.name.like(search_filter),
-                    Contact.phone.like(search_filter),
-                    Contact.email.like(search_filter),
-                    Contact.company.like(search_filter)
+        try:
+            query = db.query(Contact)
+            
+            if search:
+                search_filter = f"%{search}%"
+                query = query.filter(
+                    or_(
+                        Contact.name.like(search_filter),
+                        Contact.phone.like(search_filter),
+                        Contact.email.like(search_filter),
+                        Contact.company.like(search_filter)
+                    )
                 )
-            )
-        
-        total = query.count()
-        contacts = query.offset(skip).limit(limit).all()
-        
-        return {
-            "contacts": [contact.to_dict() for contact in contacts],
-            "total": total,
-            "skip": skip,
-            "limit": limit
-        }
+            
+            total = query.count()
+            contacts = query.offset(skip).limit(limit).all()
+            
+            return {
+                "contacts": [contact.to_dict() for contact in contacts],
+                "total": total,
+                "skip": skip,
+                "limit": limit
+            }
+        except Exception as e:
+            logger.error(f"Error getting contacts: {str(e)}")
+            raise
     
     def get_contact(self, db: Session, contact_id: int) -> Optional[Contact]:
         """
