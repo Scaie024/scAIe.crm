@@ -228,16 +228,20 @@ export default {
       sending.value = true
       
       try {
-        // Send message to backend
-        const response = await fetch('/api/chat/', {
+        // Send message to backend using the omnipotent agent
+        const response = await fetch('/api/omnipotent-agent/process-message', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
             message: messageToSend,
-            phone: customerInfo.value.phone,
-            name: customerInfo.value.name
+            platform: "web",
+            contact_info: {
+              name: customerInfo.value.name,
+              phone: customerInfo.value.phone,
+              company: customerInfo.value.company
+            }
           })
         })
         

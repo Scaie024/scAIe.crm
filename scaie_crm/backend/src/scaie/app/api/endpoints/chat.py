@@ -1,41 +1,15 @@
-from pydantic import BaseModel
-from typing import List, Optional, Dict, Any
-
-class Message(BaseModel):
-    role: str
-    content: str
-
-class ContactInfo(BaseModel):
-    phone: Optional[str] = None
-    name: Optional[str] = None
-
-class ChatRequest(BaseModel):
-    message: str
-    contact_info: Optional[ContactInfo] = None
-
-class ChatResponse(BaseModel):
-    response: str
-    contact_id: Optional[int] = None
-    message_id: Optional[int] = None
-
-class SandboxRequest(BaseModel):
-    message: str
-    reset_context: bool = False
-
-class SandboxResponse(BaseModel):
-    response: str
-    context_info: Dict[str, Any]
-# This file makes the directory a Python package
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List, Optional
-from pydantic import BaseModel
+
+from ...core.database import get_db
 
 from ...core.database import get_db
 from ...services.llm_service import llm_service
 from ...models.conversation import Message, Conversation
 from ...models.contact import Contact, InterestLevel
 from ...schemas.chat import ChatRequest, ChatResponse, SandboxRequest, SandboxResponse
+from ...schemas.contact import ContactCreate, ContactUpdate
 
 router = APIRouter(prefix="/chat", tags=["chat"])
 

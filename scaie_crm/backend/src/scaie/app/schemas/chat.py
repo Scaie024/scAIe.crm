@@ -7,17 +7,23 @@ class Message(BaseModel):
     role: str
     content: str
 
+class ContactInfo(BaseModel):
+    phone: Optional[str] = None
+    name: Optional[str] = None
+    company: Optional[str] = None
+
 class ChatRequest(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     
     message: str
-    history: Optional[List[Message]] = []
-    contact_name: Optional[str] = None
+    contact_info: Optional[ContactInfo] = None
 
 class ChatResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     
     response: str
+    contact_id: Optional[int] = None
+    message_id: Optional[int] = None
 
 class SandboxRequest(BaseModel):
     model_config = ConfigDict(from_attributes=True)

@@ -239,6 +239,7 @@ INSTRUCCIONES PARA RESPONDER:
             # Add user message to conversation
             user_message = Message(
                 conversation_id=conversation.id,
+                contact_id=contact.id,
                 sender="user",
                 content=message
             )
@@ -270,6 +271,7 @@ INSTRUCCIONES PARA RESPONDER:
                 # Save assistant response to database
                 assistant_message = Message(
                     conversation_id=conversation.id,
+                    contact_id=contact.id,
                     sender="agent",
                     content=response
                 )
@@ -289,6 +291,7 @@ INSTRUCCIONES PARA RESPONDER:
                 # Save assistant response to database
                 assistant_message = Message(
                     conversation_id=conversation.id,
+                    contact_id=contact.id,
                     sender="agent",
                     content=response
                 )
