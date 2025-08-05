@@ -1,76 +1,77 @@
-# SCAIE - Sistema Agente Conversacional de Ventas
+# scAIe - Sistema Agente
 
-## 📋 Versión 1.0 - Listo para Producción
+Sistema de agente de inteligencia artificial para automatización de ventas con integración multiplataforma.
 
-Este proyecto ahora incluye documentación completa para despliegue en producción. Para información detallada sobre cómo desplegar y configurar SCAIE v1.0 en un entorno de producción, por favor consulte:
+## Descripción
 
-📁 [`plataforma_agente_scaie/README.md`](file:///Users/arturopinzon/Desktop/scAIe%20-%20Sistema%20Agente/plataforma_agente_scaie/README.md)
+scAIe (Sistema Conversacional de Agente de Inteligencia Artificial) es una plataforma avanzada de ventas automatizadas que utiliza inteligencia artificial para interactuar con clientes potenciales a través de múltiples canales de comunicación. El sistema está diseñado para identificar el nivel de interés de los contactos, proporcionar información relevante sobre productos/servicios y automatizar el proceso de calificación de leads.
 
-## 🚀 Descripción General
+## Arquitectura del Sistema
 
-SCAIE (Sistema Conversacional de Atención e Inteligencia Empresarial) es una plataforma avanzada de agente conversacional para ventas automatizadas, impulsada por inteligencia artificial. Combina un backend en Python (FastAPI + SQLite/MySQL) con un frontend en Vue 3 para ofrecer una solución completa de gestión de conversaciones y automatización de ventas.
+### Tecnologías Principales
+- **Backend**: Python/FastAPI
+- **Base de Datos**: SQLite con SQLAlchemy ORM
+- **Frontend**: Vue.js 3 con Vite
+- **IA**: Integración con Qwen API (Alibaba Cloud)
+- **Mensajería**: Telegram Bot API, Facebook Graph API (WhatsApp)
+- **Despliegue**: Docker, Nginx
 
-### ¿Qué hace SCAIE?
-
-SCAIE automatiza la interacción con clientes potenciales a través de conversaciones inteligentes, mejorando la eficiencia de ventas y ofreciendo una experiencia personalizada a cada cliente. El sistema puede integrarse con WhatsApp y otras plataformas de mensajería para interactuar con clientes de forma natural y efectiva.
-
-## 📦 Características Principales
-
-- 🤖 **Chat Conversacional con IA** - Agente inteligente basado en Qwen AI
-- 📱 **Integración con WhatsApp** - Conecta con tus clientes donde ya están
-- 👥 **Gestión de Contactos** - CRUD completo con búsqueda y paginación
-- 💬 **Gestión de Conversaciones** - Historial completo de interacciones
-- 📊 **Panel de Administración** - Estadísticas y métricas del sistema
-- 📥 **Importación/Exportación** - Manejo de datos en CSV y JSON
-- 🔐 **Seguridad JWT** - Autenticación segura basada en tokens
-- 📚 **API RESTful Documentada** - Integración fácil con otros sistemas
-- 🖥️ **Interfaz Web Moderna** - Frontend en Vue 3 con Tailwind CSS
-
-## 🛠️ Tecnologías Utilizadas
-
-### Backend
-- **Framework**: FastAPI
-- **Lenguaje**: Python 3.10+
-- **Base de Datos**: SQLite/MySQL
-- **ORM**: SQLAlchemy
-- **Documentación API**: Swagger UI / ReDoc
-
-### Frontend
-- **Framework**: Vue 3 (Composition API)
-- **Build Tool**: Vite
-- **Estilos**: TailwindCSS
-- **Rutas**: Vue Router
-
-## 🚀 Inicio Rápido
-
-### Ejecutar el Sistema
-
-```bash
-cd plataforma_agente_scaie
-chmod +x start.sh
-./start.sh
+### Estructura del Proyecto
+```
+scaie_crm/
+├── backend/                 # Aplicación FastAPI
+│   ├── src/scaie/app/       # Código fuente principal
+│   │   ├── api/             # Endpoints de la API
+│   │   ├── core/            # Configuración del núcleo
+│   │   ├── models/          # Modelos de base de datos
+│   │   ├── schemas/         # Esquemas Pydantic
+│   │   ├── services/        # Lógica de negocio y servicios
+│   │   └── static/          # Archivos estáticos (build del frontend)
+├── frontend/                # Aplicación Vue.js
+│   ├── src/                 # Código fuente del frontend
+│   │   ├── components/      # Componentes Vue
+│   │   ├── pages/           # Páginas principales
+│   │   ├── router/          # Configuración de rutas
+│   │   ├── services/        # Clientes API
+│   │   └── utils/           # Funciones utilitarias
+├── docs/                    # Documentación
+├── scripts/                 # Scripts de utilidad
+└── config/                  # Archivos de configuración
 ```
 
-El sistema estará disponible en:
-- Frontend: http://localhost:8001/
-- API: http://localhost:8001/api
-- Documentación interactiva: http://localhost:8001/docs
+Para información más detallada sobre la estructura del proyecto, consulte [PROJECT_STRUCTURE.md](scaie_crm/docs/development/PROJECT_STRUCTURE.md).
 
-## 📖 Documentación Completa
+## Características Principales
 
-Para documentación detallada de producción, incluyendo:
-- Despliegue con Docker
-- Configuración de variables de entorno
-- Consideraciones de seguridad
-- Monitoreo y mantenimiento
+1. **Agente de IA Omnipotente**: Capaz de mantener conversaciones naturales con clientes potenciales
+2. **Gestión de Contactos**: Base de datos completa de contactos con seguimiento de interés
+3. **Multiplataforma**: Integración con Telegram y WhatsApp
+4. **Dashboard Interactivo**: Panel de control con estadísticas en tiempo real
+5. **Sistema de Interés**: Clasificación de contactos de 1-5 estrellas basado en interacciones
+6. **Personalización**: Configuración del agente para diferentes contextos de negocio
 
-Por favor consulte: 📁 [`plataforma_agente_scaie/README.md`](file:///Users/arturopinzon/Desktop/scAIe%20-%20Sistema%20Agente/plataforma_agente_scaie/README.md)
+## Requisitos del Sistema
 
-## 📄 Licencia
+- Python 3.8+
+- Node.js 14+
+- npm o yarn
+- Acceso a API de Qwen (Alibaba Cloud)
+- Cuentas de Telegram y/o WhatsApp Business (para integración completa)
 
-Este proyecto está licenciado bajo la Licencia MIT - ver el archivo [LICENSE](file:///Users/arturopinzon/Desktop/scAIe%20-%20Sistema%20Agente/plataforma_agente_scaie/LICENSE) para más detalles.
+## Instalación y Configuración
 
-<div align="center">
-  <p>Desarrollado con ❤️ por el equipo de SCAIE</p>
-  <p>🚀 Potenciado por Qwen AI</p>
-</div>
+1. Clonar el repositorio
+2. Configurar variables de entorno (`.env` files)
+3. Ejecutar script de inicialización: `./scripts/init_project.sh`
+4. Iniciar la aplicación: `./scripts/run_with_ngrok.sh`
+
+## Documentación
+
+La documentación completa se encuentra en el directorio [docs/](scaie_crm/docs/), incluyendo:
+- [Guía de Desarrollo](scaie_crm/docs/development/)
+- [Documentación de Despliegue](scaie_crm/docs/deployment/)
+- [Documentación Técnica](scaie_crm/docs/development/TECHNICAL_DOCS.md)
+
+## Contribuciones
+
+Este proyecto está en constante evolución. Para contribuir, por favor revise la documentación de desarrollo y siga las mejores prácticas establecidas.
