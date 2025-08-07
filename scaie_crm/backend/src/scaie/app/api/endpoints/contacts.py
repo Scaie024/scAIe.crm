@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, Query, UploadFile, File
 from sqlalchemy.orm import Session
 from typing import List, Optional
+from datetime import datetime
 import os
 import tempfile
 
@@ -31,12 +32,22 @@ def create_contact(
     Create new contact.
     """
     # Check if contact with this phone already exists
-    existing_contact = contact_service.get_contact_by_phone(db, contact.phone)
-    if existing_contact:
-        raise HTTPException(status_code=400, detail="Contact with this phone number already exists")
+    if contact.phone:
+        existing_contact = contact_service.get_contact_by_phone(db, contact.phone)
+        if existing_contact:
+            raise HTTPException(status_code=400, detail="Contact with this phone number already exists")
     
     db_contact = contact_service.create_contact(db, contact)
     return Contact(**db_contact.to_dict())
+
+@router.get("/stats")
+def get_contact_stats(
+    db: Session = Depends(get_db)
+):
+    """
+    Get contact statistics.
+    """
+    return contact_service.get_contact_stats(db)
 
 @router.get("/{contact_id}", response_model=Contact)
 def get_contact(
@@ -93,12 +104,15 @@ async def import_contacts(
     
     try:
         # Determine file type
-        file_type = file.filename.split(".")[-1].lower() if "." in file.filename else ""
+        file_type = ""
+        if file.filename and "." in file.filename:
+            file_type = file.filename.split(".")[-1].lower()
+        
         if file_type not in ["csv", "json"]:
             raise HTTPException(status_code=400, detail="Unsupported file type. Use CSV or JSON.")
         
         # Import contacts
-        result = contact_service.import_contacts(db, tmp_file_path, file_type)
+        result = contact_service.import_contacts_from_file(db, tmp_file_path, file_type)
         
         if not result["success"]:
             raise HTTPException(status_code=400, detail=result["message"])
@@ -109,7 +123,7 @@ async def import_contacts(
         if os.path.exists(tmp_file_path):
             os.unlink(tmp_file_path)
 
-@router.get("/export/{file_type}", response_model=ExportResponse)
+@router.get("/export/{file_type}")
 def export_contacts(
     file_type: str,
     db: Session = Depends(get_db)
@@ -120,13 +134,21 @@ def export_contacts(
     if file_type not in ["csv", "json"]:
         raise HTTPException(status_code=400, detail="Unsupported file type. Use CSV or JSON.")
     
-    # Generate file path
-    file_path = f"contacts_export.{file_type}"
-    
-    # Export contacts
-    result = contact_service.export_contacts(db, file_path, file_type)
-    
-    if not result["success"]:
-        raise HTTPException(status_code=500, detail=result["message"])
+    try:
+        if file_type == 'csv':
+            content = contact_service.export_contacts_to_csv(db)
+            media_type = "text/csv"
+            filename = f"contacts_export_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
+        else:  # json
+            content = contact_service.export_contacts_to_json(db)
+            media_type = "application/json"
+            filename = f"contacts_export_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
         
-    return result
+        from fastapi.responses import Response
+        return Response(
+            content=content,
+            media_type=media_type,
+            headers={"Content-Disposition": f"attachment; filename={filename}"}
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error exporting contacts: {str(e)}")

@@ -25,12 +25,18 @@ app = FastAPI(title="SCAIE - Sistema Agente",
 BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
 STATIC_DIR = os.path.join(BASE_DIR, "static")
 
+# Check if we're in development or production environment
+if not os.path.exists(STATIC_DIR):
+    # Try alternative path for development
+    STATIC_DIR = os.path.join(BASE_DIR, "backend", "static")
+
 # Incluir rutas de la API
 from app.api.api import api_router
 app.include_router(api_router, prefix="/api")
 
 # Configuración de archivos estáticos
-app.mount("/static", StaticFiles(directory=os.path.join(STATIC_DIR, "assets")), name="static")
+if os.path.exists(STATIC_DIR):
+    app.mount("/static", StaticFiles(directory=os.path.join(STATIC_DIR, "assets")), name="static")
 
 # Configuración de CORS
 app.add_middleware(
@@ -57,7 +63,10 @@ async def health_check():
 # Servir el archivo index.html para cualquier ruta no manejada
 @app.get("/")
 async def read_root():
-    return FileResponse(os.path.join(STATIC_DIR, "index.html"))
+    index_file = os.path.join(STATIC_DIR, "index.html")
+    if os.path.exists(index_file):
+        return FileResponse(index_file)
+    return {"detail": "Frontend not found. Please build the frontend or check static file configuration."}
 
 # Manejar rutas del frontend para SPA (Single Page Application)
 @app.get("/{full_path:path}")
@@ -66,7 +75,10 @@ async def catch_all(full_path: str, request: Request):
     if full_path.startswith(("api/", "static/", "assets/")):
         return {"detail": "Not Found"}, 404
     # Devolver el index.html para cualquier otra ruta
-    return FileResponse(os.path.join(STATIC_DIR, "index.html"))
+    index_file = os.path.join(STATIC_DIR, "index.html")
+    if os.path.exists(index_file):
+        return FileResponse(index_file)
+    return {"detail": "Frontend not found. Please build the frontend or check static file configuration."}
 
 if __name__ == "__main__":
     # Asegurarse de que el directorio static exista
@@ -75,6 +87,6 @@ if __name__ == "__main__":
     # Iniciar el servidor
     uvicorn.run("app.main:app", 
                host="0.0.0.0", 
-               port=8003,  # Changed to 8003
+               port=8003,  # Restored to original port
                reload=True,
                workers=1)

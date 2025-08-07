@@ -250,7 +250,7 @@ export default {
     
     onMounted(() => {
       // Add welcome message
-      addMessage('¡Hola! Soy tu asistente virtual de SCAIE. ¿En qué puedo ayudarte hoy?', 'ai');
+      addMessage('¡Hola! Soy SCAI. Te ayudo a automatizar procesos con IA. ¿Qué te gustaría saber?', 'ai');
     });
     
     return {

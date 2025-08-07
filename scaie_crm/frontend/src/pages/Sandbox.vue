@@ -249,7 +249,7 @@ export default {
     onMounted(() => {
       messages.value.push({
         sender: 'agent',
-        content: '¡Hola! Soy el asistente de pruebas de SCAIE. ¿En qué puedo ayudarte hoy?',
+        content: '¡Hola! Soy SCAI. Te ayudo a automatizar con IA. ¿En qué puedo ayudarte?',
         timestamp: new Date()
       })
       scrollToBottom()

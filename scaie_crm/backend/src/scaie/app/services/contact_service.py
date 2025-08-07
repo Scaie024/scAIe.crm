@@ -159,7 +159,6 @@ class ContactService:
                     continue
             setattr(db_contact, key, value)
             
-        db_contact.updated_at = datetime.utcnow()
         db.commit()
         db.refresh(db_contact)
         return db_contact
@@ -410,6 +409,76 @@ class ContactService:
             "contacts": contacts_data,
             "exported_at": datetime.utcnow().isoformat()
         }, indent=2)
+
+    def import_contacts_from_file(self, db: Session, file_path: str, file_type: str) -> Dict[str, Any]:
+        """
+        Import contacts from file.
+        
+        Args:
+            db: Database session
+            file_path: Path to the file
+            file_type: Type of file (csv or json)
+            
+        Returns:
+            Dict with import results
+        """
+        try:
+            with open(file_path, 'r', encoding='utf-8') as file:
+                file_content = file.read()
+            
+            if file_type == 'csv':
+                return self.import_contacts_from_csv(db, file_content)
+            elif file_type == 'json':
+                return self.import_contacts_from_json(db, file_content)
+            else:
+                return {
+                    "success": False,
+                    "message": f"Unsupported file type: {file_type}",
+                    "imported_count": 0
+                }
+        except Exception as e:
+            return {
+                "success": False,
+                "message": f"Error reading file: {str(e)}",
+                "imported_count": 0
+            }
+    
+    def export_contacts(self, db: Session, file_path: str, file_type: str) -> Dict[str, Any]:
+        """
+        Export contacts to file.
+        
+        Args:
+            db: Database session
+            file_path: Path to save the file
+            file_type: Type of file (csv or json)
+            
+        Returns:
+            Dict with export results
+        """
+        try:
+            if file_type == 'csv':
+                content = self.export_contacts_to_csv(db)
+            elif file_type == 'json':
+                content = self.export_contacts_to_json(db)
+            else:
+                return {
+                    "success": False,
+                    "message": f"Unsupported file type: {file_type}"
+                }
+            
+            with open(file_path, 'w', encoding='utf-8') as file:
+                file.write(content)
+            
+            return {
+                "success": True,
+                "message": f"Contacts exported to {file_path}",
+                "file_path": file_path
+            }
+        except Exception as e:
+            return {
+                "success": False,
+                "message": f"Error exporting contacts: {str(e)}"
+            }
 
 # Create singleton instance
 contact_service = ContactService()

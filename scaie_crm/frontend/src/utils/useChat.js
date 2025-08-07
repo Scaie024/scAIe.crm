@@ -82,7 +82,7 @@ export function useChat() {
     } else {
       addMessage({
         sender: 'agent',
-        content: '¡Hola! Soy SCAI, tu asistente virtual especializado en ventas automatizadas. ¿En qué puedo ayudarte hoy?'
+        content: '¡Hola! Soy SCAI. Te ayudo a automatizar procesos con IA sin programación. ¿Qué necesitas?'
       })
     }
   }

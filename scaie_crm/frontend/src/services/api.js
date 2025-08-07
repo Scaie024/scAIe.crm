@@ -5,7 +5,8 @@ const API_BASE_URL = '/api';
 class ApiService {
   async getContacts(page = 1, size = 10, search = '') {
     try {
-      const url = `${API_BASE_URL}/contacts/?page=${page}&size=${size}${search ? `&search=${encodeURIComponent(search)}` : ''}`;
+      const skip = (page - 1) * size;
+      const url = `${API_BASE_URL}/contacts/?skip=${skip}&limit=${size}${search ? `&search=${encodeURIComponent(search)}` : ''}`;
       const response = await fetch(url);
       
       if (!response.ok) {
@@ -60,7 +61,7 @@ class ApiService {
 
   async exportContacts() {
     try {
-      const response = await fetch(`${API_BASE_URL}/contacts/export`);
+      const response = await fetch(`${API_BASE_URL}/contacts/export/csv`);
       
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
@@ -151,6 +152,38 @@ class ApiService {
       throw error;
     }
   }
+  
+  async sendMessage(message, customerInfo) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/chat/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          message: message,
+          customer_info: customerInfo
+        })
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.detail || `HTTP error! status: ${response.status}`);
+      }
+      
+      return await response.json();
+    } catch (error) {
+      console.error('Error sending message:', error);
+      throw error;
+    }
+  }
 }
 
-export default new ApiService();
+// Create a singleton instance
+const apiService = new ApiService();
+
+// Export individual services
+export default apiService;
+export const chatService = {
+  sendMessage: apiService.sendMessage.bind(apiService)
+};

@@ -1,64 +1,64 @@
 <template>
   <div class="dashboard">
-    <div class="bg-gradient-to-r from-primary-600 to-accent-600 text-white p-6 rounded-2xl shadow-soft mb-6">
+    <div class="bg-blue-600 text-white p-6 rounded-lg mb-6">
       <h1 class="text-2xl font-bold">Dashboard de Operaciones</h1>
-      <p class="text-primary-100">KPIs y métricas clave de ventas automatizadas</p>
+      <p class="text-blue-100">KPIs y métricas clave de ventas automatizadas</p>
     </div>
     
     <!-- KPIs Principales -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-      <div class="card">
-        <div class="flex items-center p-5">
-          <div class="p-3 rounded-lg bg-primary-100 text-primary-600 mr-4">
+      <div class="bg-white p-6 rounded-lg shadow">
+        <div class="flex items-center">
+          <div class="p-3 rounded-lg bg-blue-100 text-blue-600 mr-4">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
             </svg>
           </div>
           <div>
             <p class="text-gray-500 text-sm">Total Contactos</p>
-            <p class="text-2xl font-bold">{{ stats.total_contacts || 0 }}</p>
+            <p class="text-2xl font-bold">{{ stats.total || 0 }}</p>
           </div>
         </div>
       </div>
       
-      <div class="card">
-        <div class="flex items-center p-5">
-          <div class="p-3 rounded-lg bg-success-100 text-success-600 mr-4">
+      <div class="bg-white p-6 rounded-lg shadow">
+        <div class="flex items-center">
+          <div class="p-3 rounded-lg bg-green-100 text-green-600 mr-4">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
           </div>
           <div>
             <p class="text-gray-500 text-sm">Clientes Interesados</p>
-            <p class="text-2xl font-bold">{{ stats.interesado || 0 }}</p>
+            <p class="text-2xl font-bold">{{ stats.interest_level_distribution?.interesado || 0 }}</p>
           </div>
         </div>
       </div>
       
-      <div class="card">
-        <div class="flex items-center p-5">
-          <div class="p-3 rounded-lg bg-warning-100 text-warning-600 mr-4">
+      <div class="bg-white p-6 rounded-lg shadow">
+        <div class="flex items-center">
+          <div class="p-3 rounded-lg bg-yellow-100 text-yellow-600 mr-4">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
             </svg>
           </div>
           <div>
             <p class="text-gray-500 text-sm">Contactados</p>
-            <p class="text-2xl font-bold">{{ stats.contactado || 0 }}</p>
+            <p class="text-2xl font-bold">{{ stats.interest_level_distribution?.contactado || 0 }}</p>
           </div>
         </div>
       </div>
       
-      <div class="card">
-        <div class="flex items-center p-5">
-          <div class="p-3 rounded-lg bg-danger-100 text-danger-600 mr-4">
+      <div class="bg-white p-6 rounded-lg shadow">
+        <div class="flex items-center">
+          <div class="p-3 rounded-lg bg-red-100 text-red-600 mr-4">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
           </div>
           <div>
             <p class="text-gray-500 text-sm">No Interesados</p>
-            <p class="text-2xl font-bold">{{ stats.no_interesado || 0 }}</p>
+            <p class="text-2xl font-bold">{{ stats.interest_level_distribution?.no_interesado || 0 }}</p>
           </div>
         </div>
       </div>
