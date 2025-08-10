@@ -25,12 +25,15 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy project
 COPY backend/ .
 
+# Ensure Python can import the src packages (so 'app.main' resolves)
+ENV PYTHONPATH="/app/src/scaie:${PYTHONPATH}"
+
 # Create a non-root user
 RUN adduser --disabled-password --gecos '' appuser
 RUN chown -R appuser:appuser /app
 USER appuser
 
-# Expose port
+# Expose FastAPI port (uvicorn below uses 8001)
 EXPOSE 8001
 
 # Run the application

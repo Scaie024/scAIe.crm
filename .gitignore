@@ -1,0 +1,33 @@
+.DS_Store
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+scaie_crm/venv/
+
+# Environment files
+.env
+scaie_crm/.env
+scaie_crm/backend/.env
+
+# Logs
+*.log
+scaie_crm/server.log
+
+# Frontend build & deps
+scaie_crm/frontend/node_modules/
+scaie_crm/frontend/dist/
+scaie_crm/core/frontend/node_modules/
+scaie_crm/core/frontend/dist/
+.vite/
+
+# IDE/editor
+.vscode/
+.idea/
+
+# Databases
+*.db
+scaie.db
+scaie_crm/data/logs/
+scaie_crm/logs/

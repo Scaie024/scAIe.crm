@@ -7,11 +7,9 @@ SCAIE CRM es una plataforma completa que combina un CRM tradicional con un agent
 ## 🚀 Inicio Rápido
 
 ```bash
-# Solo Backend
+# Clonar e iniciar el sistema
+cd scaie_crm
 ./start.sh
-
-# Sistema Completo (Backend + Telegram)
-./start-full.sh
 ```
 
 El sistema estará disponible en: **http://localhost:8003**

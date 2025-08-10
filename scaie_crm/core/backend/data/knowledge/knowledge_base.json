@@ -1,0 +1,38 @@
+{
+  "empresa_36b6350e": {
+    "id": "empresa_36b6350e",
+    "title": "SCAIE - Qué es y qué hace",
+    "content": "SCAIE es una empresa especializada en automatización empresarial con inteligencia artificial. \n                Ayudamos a las empresas a implementar IA sin código para mejorar la productividad en todos los departamentos.\n                \n                Nuestros servicios incluyen:\n                - Workshops de capacitación en IA\n                - Consultoría en automatización de procesos\n                - Implementación de soluciones de IA personalizadas\n                - Análisis de datos y visualización\n                - Generación de contenido automatizada\n                \n                SCAIE se enfoca en hacer la IA accesible para todas las empresas, sin importar su tamaño o sector.",
+    "chunks": [
+      "SCAIE es una empresa especializada en automatización empresarial con inteligencia artificial. Ayudamos a las empresas a implementar IA sin código para mejorar la productividad en todos los departamentos. Nuestros servicios incluyen: - Workshops de capacitación en IA - Consultoría en automatización de procesos - Implementación de soluciones de IA personalizadas - Análisis de datos y visualización - Generación de contenido automatizada SCAIE se enfoca en hacer la IA accesible para todas las empresas, sin importar su tamaño o sector."
+    ],
+    "category": "empresa",
+    "metadata": {},
+    "created_at": "2025-08-10T12:41:21.357153",
+    "updated_at": "2025-08-10T12:41:21.357261"
+  },
+  "servicios_21720212": {
+    "id": "servicios_21720212",
+    "title": "Workshop: Sé más eficiente con IA",
+    "content": "Workshop especializado para equipos que quieren implementar IA sin código.\n                \n                MODALIDADES:\n                - Online en vivo (recomendado)\n                - Presencial \n                - Híbrido\n                \n                PRECIOS:\n                - Básico: $1,499 MXN (2 horas, hasta 10 personas)\n                - Profesional: $2,999 MXN (4 horas, hasta 20 personas)  \n                - Empresarial: $5,000 MXN (contenido específico para la empresa)\n                \n                INCLUYE:\n                - Manual del workshop\n                - Grabación de la sesión\n                - Sesión de seguimiento (30 minutos)\n                - Acceso a herramientas freemium\n                \n                El workshop cubre automatización de tareas, análisis de datos, generación de contenido y más.",
+    "chunks": [
+      "Workshop especializado para equipos que quieren implementar IA sin código. MODALIDADES: - Online en vivo (recomendado) - Presencial - Híbrido PRECIOS: - Básico: $1,499 MXN (2 horas, hasta 10 personas) - Profesional: $2,999 MXN (4 horas, hasta 20 personas) - Empresarial: $5,000 MXN (contenido específico para la empresa) INCLUYE: - Manual del workshop - Grabación de la sesión - Sesión de seguimiento (30 minutos) - Acceso a herramientas freemium El workshop cubre automatización de tareas, análisis de datos, generación de contenido y más."
+    ],
+    "category": "servicios",
+    "metadata": {},
+    "created_at": "2025-08-10T12:41:21.360495",
+    "updated_at": "2025-08-10T12:41:21.360499"
+  },
+  "contacto_4da96765": {
+    "id": "contacto_4da96765",
+    "title": "Información de Contacto",
+    "content": "DATOS DE CONTACTO SCAIE:\n                \n                Teléfono: 55 3591 3417\n                WhatsApp: https://wa.me/525535913417\n                Email: info@scaie.com.mx\n                Website: www.scaie.com.mx\n                \n                AGENDA UNA LLAMADA GRATUITA:\n                https://calendly.com/scaie-empresa/30min\n                \n                HORARIOS DE ATENCIÓN:\n                Lunes a Viernes: 9:00 AM - 6:00 PM (GMT-6)\n                \n                OBJETIVO: El agente debe dirigir todas las conversaciones hacia agendar una llamada al 55 3591 3417",
+    "chunks": [
+      "DATOS DE CONTACTO SCAIE: Teléfono: 55 3591 3417 WhatsApp: https://wa.me/525535913417 Email: info@scaie.com.mx Website: www.scaie.com.mx AGENDA UNA LLAMADA GRATUITA: https://calendly.com/scaie-empresa/30min HORARIOS DE ATENCIÓN: Lunes a Viernes: 9:00 AM - 6:00 PM (GMT-6) OBJETIVO: El agente debe dirigir todas las conversaciones hacia agendar una llamada al 55 3591 3417"
+    ],
+    "category": "contacto",
+    "metadata": {},
+    "created_at": "2025-08-10T12:41:21.361046",
+    "updated_at": "2025-08-10T12:41:21.361048"
+  }
+}

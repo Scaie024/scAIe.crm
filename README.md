@@ -1,77 +1,53 @@
-# scAIe - Sistema Agente
+# SCAIE – Sistema Agente Conversacional (guía corta y precisa)
 
-Sistema de agente de inteligencia artificial para automatización de ventas con integración multiplataforma.
+Versión actual: 3.0.1 (2025-08-10)
 
-## Descripción
+Novedades clave:
+- LLM activado por defecto (respuestas coherentes, sin fallback).
+- Bot de Telegram integrado al mismo flujo del agente del backend.
+- Normalización y deduplicación robusta en contactos (crear/actualizar/importar).
+- Frontend SPA servido correctamente desde FastAPI (arreglo de rutas /assets).
 
-scAIe (Sistema Conversacional de Agente de Inteligencia Artificial) es una plataforma avanzada de ventas automatizadas que utiliza inteligencia artificial para interactuar con clientes potenciales a través de múltiples canales de comunicación. El sistema está diseñado para identificar el nivel de interés de los contactos, proporcionar información relevante sobre productos/servicios y automatizar el proceso de calificación de leads.
+## Requisitos
+- Python 3.9+
+- Node 16+ (solo si vas a reconstruir el frontend)
 
-## Arquitectura del Sistema
+## Variables de entorno (.env en `scaie_crm/`)
+Ejemplo mínimo:
 
-### Tecnologías Principales
-- **Backend**: Python/FastAPI
-- **Base de Datos**: SQLite con SQLAlchemy ORM
-- **Frontend**: Vue.js 3 con Vite
-- **IA**: Integración con Qwen API (Alibaba Cloud)
-- **Mensajería**: Telegram Bot API, Facebook Graph API (WhatsApp)
-- **Despliegue**: Docker, Nginx
+DATABASE_URL=sqlite:///./scaie.db
+DASHSCOPE_API_KEY=tu_api_key_de_dashscope
+QWEN_MODEL=qwen-plus
+TELEGRAM_BOT_TOKEN=tu_token_de_bot
+SECRET_KEY=cambia_esta_clave
 
-### Estructura del Proyecto
-```
-scaie_crm/
-├── backend/                 # Aplicación FastAPI
-│   ├── src/scaie/app/       # Código fuente principal
-│   │   ├── api/             # Endpoints de la API
-│   │   ├── core/            # Configuración del núcleo
-│   │   ├── models/          # Modelos de base de datos
-│   │   ├── schemas/         # Esquemas Pydantic
-│   │   ├── services/        # Lógica de negocio y servicios
-│   │   └── static/          # Archivos estáticos (build del frontend)
-├── frontend/                # Aplicación Vue.js
-│   ├── src/                 # Código fuente del frontend
-│   │   ├── components/      # Componentes Vue
-│   │   ├── pages/           # Páginas principales
-│   │   ├── router/          # Configuración de rutas
-│   │   ├── services/        # Clientes API
-│   │   └── utils/           # Funciones utilitarias
-├── docs/                    # Documentación
-├── scripts/                 # Scripts de utilidad
-└── config/                  # Archivos de configuración
-```
+## Cómo ejecutar
+- Sistema completo (web + bot):
+	- cd scaie_crm
+	- ./run_complete_system.sh
 
-Para información más detallada sobre la estructura del proyecto, consulte [PROJECT_STRUCTURE.md](scaie_crm/docs/development/PROJECT_STRUCTURE.md).
+- Solo backend/web:
+	- cd scaie_crm
+	- ./run_scaie.sh
 
-## Características Principales
+- Solo bot de Telegram:
+	- cd scaie_crm
+	- source venv/bin/activate
+	- python scai_telegram_bot.py
 
-1. **Agente de IA Omnipotente**: Capaz de mantener conversaciones naturales con clientes potenciales
-2. **Gestión de Contactos**: Base de datos completa de contactos con seguimiento de interés
-3. **Multiplataforma**: Integración con Telegram y WhatsApp
-4. **Dashboard Interactivo**: Panel de control con estadísticas en tiempo real
-5. **Sistema de Interés**: Clasificación de contactos de 1-5 estrellas basado en interacciones
-6. **Personalización**: Configuración del agente para diferentes contextos de negocio
+Accesos rápidos:
+- Web: http://localhost:8003
+- API Docs: http://localhost:8003/docs
+- Bot: https://t.me/scAIebot
 
-## Requisitos del Sistema
+## Estructura relevante
+- backend/src/scaie/app/  FastAPI (API + estáticos)
+- run_complete_system.sh  Inicia web + bot
+- run_scaie.sh            Inicia solo web
+- scai_telegram_bot.py    Bot de Telegram (polling)
 
-- Python 3.8+
-- Node.js 14+
-- npm o yarn
-- Acceso a API de Qwen (Alibaba Cloud)
-- Cuentas de Telegram y/o WhatsApp Business (para integración completa)
-
-## Instalación y Configuración
-
-1. Clonar el repositorio
-2. Configurar variables de entorno (`.env` files)
-3. Ejecutar script de inicialización: `./scripts/init_project.sh`
-4. Iniciar la aplicación: `./scripts/run_with_ngrok.sh`
-
-## Documentación
-
-La documentación completa se encuentra en el directorio [docs/](scaie_crm/docs/), incluyendo:
-- [Guía de Desarrollo](scaie_crm/docs/development/)
-- [Documentación de Despliegue](scaie_crm/docs/deployment/)
-- [Documentación Técnica](scaie_crm/docs/development/TECHNICAL_DOCS.md)
-
-## Contribuciones
-
-Este proyecto está en constante evolución. Para contribuir, por favor revise la documentación de desarrollo y siga las mejores prácticas establecidas.
+Notas:
+- Se eliminaron/centralizaron READMEs duplicados: este es el README canónico.
+- Guía para desarrolladores: `scaie_crm/docs/development/DEVELOPMENT_GUIDE.md`.
+- El bot usa polling (no se necesita webhook/ngrok).
+- Si reconstruyes el frontend, asegúrate de que el build termine en `frontend/dist/`; el backend servirá los estáticos.

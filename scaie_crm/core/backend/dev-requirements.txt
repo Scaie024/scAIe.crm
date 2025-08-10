@@ -1,0 +1,6 @@
+# Dependencias de desarrollo y testing
+pytest>=7.4
+pytest-cov>=4.0.0
+httpx>=0.25
+locust>=2.15.1
+bandit>=1.7.5
